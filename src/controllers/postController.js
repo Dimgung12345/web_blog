@@ -85,3 +85,14 @@ export const deletePost = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// controller (SSR)
+export const listPage = async (req, res) => {
+  try {
+    const posts = await db.Post.findAll({ include: db.User });
+    // Perbedaanya pakai res.render Kalau lu liat keatas semua nya res.json karena controller API
+    res.render("pages/posts/list", { posts });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};

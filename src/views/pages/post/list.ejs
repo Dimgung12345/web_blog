@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Daftar Post</title>
+</head>
+<body>
+  <h1>Posts</h1>
+  <ul>
+    <% posts.forEach(post => { %>
+      <li>
+        <a href="/posts/<%= post.id %>"><%= post.title %></a>
+        oleh <%= post.User.username %>
+      </li>
+    <% }) %>
+  </ul>
+</body>
+</html>
