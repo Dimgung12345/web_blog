@@ -1,0 +1,16 @@
+<%- include('../../partials/header', { title: post.title + ' - Blog' }) %>
+
+<article style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+    <a href="/" style="color: #7f8c8d; text-decoration: none;">&larr; Kembali ke Beranda</a>
+    <h1 style="color: #2c3e50; font-size: 2.5em; margin-bottom: 10px;"><%= post.title %></h1>
+    
+    <div style="font-size: 1em; color: #7f8c8d; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px;">
+        <span style="background: #3498db; color: white; padding: 4px 10px; border-radius: 4px; font-weight: bold;"><%= post.Category ? post.Category.name : 'Uncategorized' %></span>
+        <span style="margin-left: 15px;">Ditulis oleh <strong><%= post.User ? post.User.username : 'Unknown' %></strong></span>
+        <span style="margin-left: 15px;"><%= new Date(post.createdAt).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+    </div>
+
+    <div style="line-height: 1.8; color: #444; font-size: 1.1em; white-space: pre-wrap;"><%= post.content %></div>
+</article>
+
+<%- include('../../partials/footer') %>

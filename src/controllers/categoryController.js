@@ -18,9 +18,10 @@ export const createCategory = async (req, res) => {
 export const getCategories = async (req, res) => {
   try {
     const categories = await Category.findAll();
+    if (categories.length === 0) return res.json({ message: "Belum ada kategori" });
     res.json(categories);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).render("pages/public/404");
   }
 };
 
@@ -30,10 +31,10 @@ export const getCategoryWithPosts = async (req, res) => {
     const category = await Category.findByPk(req.params.id, {
       include: [{ model: Post }]
     });
-    if (!category) return res.status(404).json({ error: "Kategori tidak ditemukan" });
+    if (!category) return res.status(404).render("pages/public/404");
     res.json(category);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).render("pages/public/404");
   }
 };
 
