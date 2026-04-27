@@ -1,0 +1,54 @@
+<%- include('../../partials/header', { title: 'Login Admin - Blog' }) %>
+
+<div style="max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center; color: #2c3e50; margin-bottom: 20px;">Login Admin</h2>
+    
+    <div id="error-message" style="background: #e74c3c; color: white; padding: 10px; border-radius: 4px; margin-bottom: 15px; display: none;"></div>
+
+    <form id="login-form">
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Email</label>
+            <input type="email" id="email" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Password</label>
+            <input type="password" id="password" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+        </div>
+        <button type="submit" style="width: 100%; padding: 12px; background: #3498db; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 1em;">Login</button>
+    </form>
+</div>
+
+<script>
+    // Redirect if already logged in
+    if (localStorage.getItem('token')) {
+        window.location.href = '/admin';
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        try {
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            
+            if (res.ok && data.data && data.data.token) {
+                localStorage.setItem('token', data.data.token);
+                window.location.href = '/admin';
+            } else {
+                const errDiv = document.getElementById('error-message');
+                errDiv.textContent = data.error || data.message || 'Login gagal';
+                errDiv.style.display = 'block';
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    });
+</script>
+
+<%- include('../../partials/footer') %>
