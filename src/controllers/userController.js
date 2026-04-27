@@ -39,10 +39,10 @@ export const register = async (req, res) => {
 // Login User
 export const login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    // Cari user berdasarkan username
-    const user = await User.findOne({ where: { username } });
+    // Cari user berdasarkan email
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ error: "User tidak ditemukan" });
     }

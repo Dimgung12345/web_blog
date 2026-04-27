@@ -25,9 +25,10 @@ export const create = async (req, res) => {
 export const index = async (req, res) => {
   try {
     const mediaList = await Media.findAll({ include: Post });
+    if (mediaList.length === 0) return res.json({ message: "Belum ada media" });
     res.json(mediaList);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).render("pages/public/404");
   }
 };
 
@@ -35,10 +36,10 @@ export const index = async (req, res) => {
 export const show = async (req, res) => {
   try {
     const media = await Media.findByPk(req.params.id, { include: Post });
-    if (!media) return res.status(404).json({ error: "Media not found" });
+    if (!media) return res.status(404).render("pages/public/404");
     res.json(media);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).render("pages/public/404");
   }
 };
 

@@ -1,0 +1,19 @@
+<aside style="width: 250px;">
+    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Kategori</h3>
+        <ul style="list-style: none; padding: 0; margin-top: 15px;">
+            <li style="margin-bottom: 12px;">
+                <a href="/" style="text-decoration: none; color: #3498db; font-weight: 500;">Semua Kategori</a>
+            </li>
+            <% if (typeof categories !== 'undefined') { %>
+                <% categories.forEach(cat => { %>
+                    <li style="margin-bottom: 12px;">
+                        <a href="/posts/category/<%= cat.id %>" style="text-decoration: none; color: #555; transition: 0.3s;">
+                            <%= cat.name %>
+                        </a>
+                    </li>
+                <% }) %>
+            <% } %>
+        </ul>
+    </div>
+</aside>
