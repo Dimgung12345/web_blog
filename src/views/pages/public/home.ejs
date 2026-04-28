@@ -4,7 +4,7 @@
         <p style="color: #7f8c8d; font-size: 1.1em;">Tempat berbagi wawasan seputar teknologi, sains, dan kehidupan.</p>
         <% if (isLandingPage) { %>
             <div style="margin-top: 20px;">
-                <a href="/posts" style="display: inline-block; padding: 10px 20px; background: #3498db; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">Lihat Semua Postingan &rarr;</a>
+                <a href="/blog/posts" style="display: inline-block; padding: 10px 20px; background: #3498db; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">Lihat Semua Postingan &rarr;</a>
             </div>
         <% } %>
     </div>
@@ -19,7 +19,7 @@
                     <% posts.forEach(post=> { %>
                         <article
                             style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                            <h2 style="margin-top: 0;"><a href="/posts/<%= post.id %>"
+                            <h2 style="margin-top: 0;"><a href="/blog/posts/<%= post.id %>"
                                     style="text-decoration: none; color: #2c3e50;">
                                     <%= post.title %>
                                 </a></h2>
@@ -33,7 +33,7 @@
                             <p style="color: #555; line-height: 1.6;">
                                 <%= post.content.substring(0, 150) %>...
                             </p>
-                            <a href="/posts/<%= post.id %>"
+                            <a href="/blog/posts/<%= post.id %>"
                                 style="color: #3498db; text-decoration: none; font-weight: bold;">Baca selengkapnya
                                 &rarr;</a>
                         </article>
