@@ -64,6 +64,25 @@ export const getPostById = async (req, res) => {
   }
 };
 
+export const getPostBySlug = async (req, res) => {
+  try {
+    const post = await Post.findOne({
+      where: {
+        slug: req.params.slug
+      },
+      include: [
+        { model: Category },
+        { model: db.User, attributes: ["username"] }
+      ]
+    })
+    if (!post) return res.status(404).render("pages/public/404");
+    
+    res.render("pages/public/post-detail", { post });
+  } catch(err) {
+    res.render("pages/public/404")
+  }
+};
+
 export const getPostByCategory = async (req, res) => {
   try {
     const posts = await Post.findAll({
