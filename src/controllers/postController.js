@@ -1,10 +1,23 @@
 import db from "../../models/index.js";
 const { Post, Category } = db;
 
+const toSlug = (text) => {
+  return text
+    .toString() 
+    .normalize('NFD') 
+    .replace(/[\u0300-\u036f]/g, '') 
+    .toLowerCase()  
+    .trim() 
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-'); 
+};
+
 // Create Post
 export const createPost = async (req, res) => {
   try {
-    const { title, content, CategoryId, pathID, slug } = req.body;
+    const { title, content, CategoryId, pathID} = req.body;
+    const slug = toSlug(title)
     const newPost = await db.Post.create({
       title,
       content,
@@ -110,7 +123,8 @@ export const getPostByCategory = async (req, res) => {
 // Update Post
 export const updatePost = async (req, res) => {
   try {
-    const { title, content, author, CategoryId, slug } = req.body;
+    const { title, content, author, CategoryId } = req.body;
+    const slug = toSlug(title)
     const [updated] = await Post.update(
       { title, content, author, CategoryId, slug },
       { where: { id: req.params.id } }
