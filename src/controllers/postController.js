@@ -4,14 +4,14 @@ const { Post, Category } = db;
 // Create Post
 export const createPost = async (req, res) => {
   try {
-    const { title, content, CategoryId, pathID } = req.body;
-
+    const { title, content, CategoryId, pathID, slug } = req.body;
     const newPost = await db.Post.create({
       title,
       content,
       CategoryId,
       pathID,
-      UserId: req.user.id   // ambil dari token
+      slug,
+      UserId: req.user.id // ambil dari token
     });
 
     res.status(201).json(newPost);
@@ -91,9 +91,9 @@ export const getPostByCategory = async (req, res) => {
 // Update Post
 export const updatePost = async (req, res) => {
   try {
-    const { title, content, author, CategoryId } = req.body;
+    const { title, content, author, CategoryId, slug } = req.body;
     const [updated] = await Post.update(
-      { title, content, author, CategoryId },
+      { title, content, author, CategoryId, slug },
       { where: { id: req.params.id } }
     );
     if (updated === 0) return res.status(404).json({ error: "Post tidak ditemukan" });
