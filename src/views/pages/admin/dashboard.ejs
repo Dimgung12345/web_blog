@@ -54,18 +54,18 @@
     <script>
         const token = localStorage.getItem('token');
         if (!token) {
-            window.location.href = '/login';
+            window.location.href = '/blog/login';
         }
 
         function logout() {
             localStorage.removeItem('token');
-            window.location.href = '/';
+            window.location.href = '/blog/login';
         }
 
         async function loadData() {
             try {
                 // Load Categories
-                const catRes = await fetch('/categories', { headers: { 'Accept': 'application/json' } });
+                const catRes = await fetch('/blog/categories', { headers: { 'Accept': 'application/json' } });
                 const categories = await catRes.json();
                 const catSelect = document.getElementById('post-category');
                 
@@ -76,7 +76,7 @@
                 }
 
                 // Load Posts
-                const postRes = await fetch('/posts', { headers: { 'Accept': 'application/json' } });
+                const postRes = await fetch('/blog/posts', { headers: { 'Accept': 'application/json' } });
                 const posts = await postRes.json();
                 const tbody = document.getElementById('admin-posts-list');
 
@@ -109,7 +109,7 @@
             const content = document.getElementById('post-content').value;
 
             try {
-                const res = await fetch('/posts', {
+                const res = await fetch('/blog/posts', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -132,7 +132,7 @@
         async function deletePost(id) {
             if (!confirm('Yakin hapus?')) return;
             try {
-                const res = await fetch(`/posts/${id}`, {
+                const res = await fetch(`/blog/posts/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });

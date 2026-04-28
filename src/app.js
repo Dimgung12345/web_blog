@@ -29,13 +29,13 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 // Page Routes (SSR)
-app.use("/", pageRoutes);
+app.use("/blog", pageRoutes);
 
 // API routes
-app.use("/posts", postRoutes);
-app.use("/users", userRoutes);
-app.use("/media", mediaRoutes);
-app.use("/categories", categoryRoutes);
+app.use("/blog/posts", postRoutes);
+app.use("/blog/users", userRoutes);
+app.use("/blog/media", mediaRoutes);
+app.use("/blog/categories", categoryRoutes);
 
 // 404 not found kalo gada
 app.use((req, res) => {
