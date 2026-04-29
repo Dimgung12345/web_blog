@@ -41,21 +41,22 @@ npm run dev
 ```
 Aplikasi akan berjalan di `http://localhost:5000`.
 
-## Struktur Route Utama
+## Struktur Route Utama 
 
 ### Halaman Publik
-- `/` : Landing page.
-- `/posts` : Semua postingan blog.
-- `/posts/:id` : Detail postingan.
-- `/posts/category/:categoryId` : Postingan berdasarkan kategori.
+- `/blog` : Landing page & Beranda.
+- `/blog/posts/:slug` : Detail postingan berdasarkan slug.
+- `/blog/posts/category/:slug` : Postingan berdasarkan kategori slug.
 
 ### Halaman Admin & Auth
-- `/login` : Halaman login admin.
-- `/admin` : Dashboard pengelolaan postingan (memerlukan JWT di LocalStorage).
+- `/blog/login` : Halaman login admin.
+- `/blog/admin` : Dashboard pengelolaan postingan (memerlukan JWT di LocalStorage).
 
 ### API Endpoints
-- `POST /posts` : Membuat postingan baru (Protected).
-- `PUT /posts/:id` : Mengedit postingan (Protected).
-- `DELETE /posts/:id` : Menghapus postingan (Protected).
-- `GET /categories` : Mengambil semua kategori.
-- `GET /media` : Mengambil daftar media.
+- `GET /blog/posts` : Mengambil semua postingan.
+- `GET /blog/posts/:slug` : Mengambil detail postingan berdasarkan slug.
+- `POST /blog/posts` : Membuat postingan baru (Protected).
+- `PUT /blog/posts/:id` : Mengedit postingan (Protected).
+- `DELETE /blog/posts/:id` : Menghapus postingan (Protected).
+- `GET /blog/categories` : Mengambil semua kategori.
+- `GET /blog/media` : Mengambil daftar media.
