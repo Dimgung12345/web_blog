@@ -16,6 +16,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const BASE_PATH = "/blog";
 
+// expose BASE_PATH to views
+app.use((req, res, next) => {
+  res.locals.BASE_PATH = BASE_PATH;
+  next();
+});
+
 // utils untuk file
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
