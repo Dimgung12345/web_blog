@@ -44,8 +44,10 @@ Aplikasi akan berjalan di `http://localhost:5000`.
 ## Struktur Route Utama 
 
 ### Halaman Publik
-- `/blog` : Landing page & Beranda.
+- `/blog` : Landing page & Beranda (Limit 5 post terbaru).
+- `/blog/posts` : Semua daftar postingan blog.
 - `/blog/posts/:slug` : Detail postingan berdasarkan slug.
+- `/blog/categories` : Daftar semua kategori.
 - `/blog/posts/category/:slug` : Postingan berdasarkan kategori slug.
 
 ### Halaman Admin & Auth

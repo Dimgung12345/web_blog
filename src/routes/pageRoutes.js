@@ -21,6 +21,31 @@ router.get("/", async (req, res) => {
     }
 });
 
+// All Posts page
+router.get("/posts", async (req, res) => {
+    try {
+        const posts = await Post.findAll({
+            include: [{ model: Category }, { model: User, attributes: ['username'] }],
+            order: [['createdAt', 'DESC']]
+        });
+        
+        const categories = await Category.findAll();
+        res.render("pages/public/home", { posts, categories, isLandingPage: false, title: 'Semua Postingan' });
+    } catch (err) {
+        res.status(500).send("Error loading posts page: " + err.message);
+    }
+});
+
+// Categories list page
+router.get("/categories", async (req, res) => {
+    try {
+        const categories = await Category.findAll();
+        res.render("pages/public/categories", { categories });
+    } catch (err) {
+        res.status(500).send("Error loading categories page: " + err.message);
+    }
+});
+
 router.get("/admin", (req, res) => {
     res.render("pages/admin/dashboard");
 });

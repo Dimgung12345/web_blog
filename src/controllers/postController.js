@@ -123,10 +123,15 @@ export const getPostByCategory = async (req, res) => {
 // Update Post
 export const updatePost = async (req, res) => {
   try {
-    const { title, content, author, CategoryId } = req.body;
-    const slug = toSlug(title)
+    const { title, content, CategoryId } = req.body;
+    const updateData = { title, content, CategoryId };
+    
+    if (title) {
+      updateData.slug = toSlug(title);
+    }
+    
     const [updated] = await Post.update(
-      { title, content, author, CategoryId, slug },
+      updateData,
       { where: { id: req.params.id } }
     );
     if (updated === 0) return res.status(404).json({ error: "Post tidak ditemukan" });
