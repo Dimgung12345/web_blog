@@ -1,17 +1,30 @@
 import db from "../../models/index.js";
 const { Post, Category } = db;
 
+const toSlug = (text) => {
+  return text
+    .toString() 
+    .normalize('NFD') 
+    .replace(/[\u0300-\u036f]/g, '') 
+    .toLowerCase()  
+    .trim() 
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-'); 
+};
+
 // Create Post
 export const createPost = async (req, res) => {
   try {
-    const { title, content, CategoryId, pathID } = req.body;
-
+    const { title, content, CategoryId, pathID} = req.body;
+    const slug = toSlug(title)
     const newPost = await db.Post.create({
       title,
       content,
       CategoryId,
       pathID,
-      UserId: req.user.id   // ambil dari token
+      slug,
+      UserId: req.user.id // ambil dari token
     });
 
     res.status(201).json(newPost);
@@ -64,6 +77,25 @@ export const getPostById = async (req, res) => {
   }
 };
 
+export const getPostBySlug = async (req, res) => {
+  try {
+    const post = await Post.findOne({
+      where: {
+        slug: req.params.slug
+      },
+      include: [
+        { model: Category },
+        { model: db.User, attributes: ["username"] }
+      ]
+    })
+    if (!post) return res.status(404).render("pages/public/404");
+    
+    res.render("pages/public/post-detail", { post });
+  } catch(err) {
+    res.render("pages/public/404")
+  }
+};
+
 export const getPostByCategory = async (req, res) => {
   try {
     const posts = await Post.findAll({
@@ -92,8 +124,9 @@ export const getPostByCategory = async (req, res) => {
 export const updatePost = async (req, res) => {
   try {
     const { title, content, author, CategoryId } = req.body;
+    const slug = toSlug(title)
     const [updated] = await Post.update(
-      { title, content, author, CategoryId },
+      { title, content, author, CategoryId, slug },
       { where: { id: req.params.id } }
     );
     if (updated === 0) return res.status(404).json({ error: "Post tidak ditemukan" });
