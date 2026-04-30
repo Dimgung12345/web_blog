@@ -35,14 +35,14 @@ app.use(`${BASE_PATH}/storage`, express.static("storage"));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// Page Routes (SSR)
-app.use(BASE_PATH, pageRoutes);
-
 // API routes
 app.use(`${BASE_PATH}/posts`, postRoutes);
 app.use(`${BASE_PATH}/users`, userRoutes);
 app.use(`${BASE_PATH}/media`, mediaRoutes);
 app.use(`${BASE_PATH}/categories`, categoryRoutes);
+
+// Page Routes (SSR)
+app.use(BASE_PATH, pageRoutes);
 
 // 404 not found kalo gada
 app.use((req, res) => {
