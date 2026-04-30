@@ -1,13 +1,23 @@
 import db from "../../models/index.js";
-const { Post, Category } = db;
+const { Post, Category, Sequelize } = db;
+
+function generateSlug(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+}
 
 // Create Post
 export const createPost = async (req, res) => {
   try {
     const { title, content, CategoryId, pathID } = req.body;
+    const slug = generateSlug(title);
 
     const newPost = await db.Post.create({
       title,
+      slug,
       content,
       CategoryId,
       pathID,
@@ -20,80 +30,27 @@ export const createPost = async (req, res) => {
   }
 };
 
+export const searchPosts = async (req, res) => {
+  const asd = req.query.q; // ambil keyword dari query string ?q=...
+  console.log("RIJAL - Search query:", asd);
 
-export const getAllPosts = async (req, res) => {
-  try {
-    const posts = await Post.findAll({ 
-      include: [
-        { model: Category },
-        { model: db.User, attributes: ["username"] }
-      ],
-      order: [['createdAt', 'DESC']]
-    });
-    
-    if (req.headers.accept && req.headers.accept.includes("json")) {
-      if (posts.length === 0) return res.json({ message: "Belum ada postingan" });
-      return res.json(posts);
+  const posts = Post.findAll({
+    where: {
+      title: {
+        [Sequelize.Op.iLike]: `%${asd}%`
+      }
     }
-    
-    const categories = await Category.findAll();
-    res.render("pages/public/home", { 
-      posts, 
-      categories, 
-      isLandingPage: false,
-      title: "Semua Postingan - Blog" 
-    });
-  } catch (err) {
-    res.status(500).render("pages/public/404");
-  }
-};
+  });
+  res.json(posts);
 
-export const getPostById = async (req, res) => {
-  try {
-    const post = await Post.findByPk(req.params.id, { 
-      include: [
-        { model: Category },
-        { model: db.User, attributes: ["username"] }
-      ] 
-    });
-    if (!post) return res.status(404).render("pages/public/404");
-    
-    res.render("pages/public/post-detail", { post });
-  } catch (err) {
-    res.status(500).render("pages/public/404");
-  }
 };
-
-export const getPostByCategory = async (req, res) => {
-  try {
-    const posts = await Post.findAll({
-      where: { CategoryId: req.params.categoryId },
-      include: [
-        { model: Category },
-        { model: db.User, attributes: ["username"] }
-      ],
-      order: [['createdAt', 'DESC']]
-    });
-    
-    const categories = await Category.findAll();
-    
-    res.render("pages/public/home", { 
-      posts, 
-      categories, 
-      isLandingPage: false,
-      title: "Kategori - Blog" 
-    });
-  } catch (err) {
-    res.status(500).render("pages/public/404");
-  }
-};
-
 // Update Post
 export const updatePost = async (req, res) => {
   try {
     const { title, content, author, CategoryId } = req.body;
+    const slug = generateSlug(title);
     const [updated] = await Post.update(
-      { title, content, author, CategoryId },
+      { title, content, slug, author, CategoryId },
       { where: { id: req.params.id } }
     );
     if (updated === 0) return res.status(404).json({ error: "Post tidak ditemukan" });
@@ -116,13 +73,3 @@ export const deletePost = async (req, res) => {
   }
 };
 
-// controller (SSR)
-export const listPage = async (req, res) => {
-  try {
-    const posts = await db.Post.findAll({ include: db.User });
-    // Perbedaanya pakai res.render Kalau lu liat keatas semua nya res.json karena controller API
-    res.render("pages/posts/list", { posts });
-  } catch (err) {
-    res.status(500).send(err.message);
-  }
-};
