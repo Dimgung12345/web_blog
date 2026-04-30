@@ -11,20 +11,20 @@ function generateSlug(title) {
 
 const toSlug = (text) => {
   return text
-    .toString() 
-    .normalize('NFD') 
-    .replace(/[\u0300-\u036f]/g, '') 
-    .toLowerCase()  
-    .trim() 
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
     .replace(/\s+/g, '-')
     .replace(/[^\w-]+/g, '')
-    .replace(/--+/g, '-'); 
+    .replace(/--+/g, '-');
 };
 
 // Create Post
 export const createPost = async (req, res) => {
   try {
-    const { title, content, CategoryId, pathID} = req.body;
+    const { title, content, CategoryId, pathID } = req.body;
     const slug = toSlug(title)
     const newPost = await db.Post.create({
       title,
@@ -46,14 +46,11 @@ export const searchPosts = async (req, res) => {
   const asd = req.query.q; // ambil keyword dari query string ?q=...
   console.log("RIJAL - Search query:", asd);
 
-  const posts = Post.findAll({
-    where: {
-      title: {
-        [Sequelize.Op.iLike]: `%${asd}%`
-      }
-    }
+  const posts = await Post.findAll({
+    where: { title: { [Sequelize.Op.iLike]: `%${asd}%` } }
   });
   res.json(posts);
+};
 
 export const getPostBySlug = async (req, res) => {
   try {
@@ -67,9 +64,9 @@ export const getPostBySlug = async (req, res) => {
       ]
     })
     if (!post) return res.status(404).render("pages/public/404");
-    
+
     res.render("pages/public/post-detail", { post });
-  } catch(err) {
+  } catch (err) {
     res.render("pages/public/404")
   }
 };
@@ -84,14 +81,14 @@ export const getPostByCategory = async (req, res) => {
       ],
       order: [['createdAt', 'DESC']]
     });
-    
+
     const categories = await Category.findAll();
-    
-    res.render("pages/public/home", { 
-      posts, 
-      categories, 
+
+    res.render("pages/public/home", {
+      posts,
+      categories,
       isLandingPage: false,
-      title: "Kategori - Blog" 
+      title: "Kategori - Blog"
     });
   } catch (err) {
     res.status(500).render("pages/public/404");
@@ -102,11 +99,11 @@ export const updatePost = async (req, res) => {
   try {
     const { title, content, CategoryId } = req.body;
     const updateData = { title, content, CategoryId };
-    
+
     if (title) {
       updateData.slug = toSlug(title);
     }
-    
+
     const [updated] = await Post.update(
       updateData,
       { where: { id: req.params.id } }
@@ -130,4 +127,3 @@ export const deletePost = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-

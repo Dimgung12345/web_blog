@@ -38,6 +38,7 @@ router.get("/search", async (req, res) => {
   } catch (err) {
     res.status(500).send("Error searching posts: " + err.message);
   }
+});
 // All Posts page
 router.get("/posts", async (req, res) => {
     try {
