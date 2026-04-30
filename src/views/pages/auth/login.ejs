@@ -21,7 +21,7 @@
 <script>
     // Redirect if already logged in
     if (localStorage.getItem('token')) {
-        window.location.href = '/blog/admin';
+        window.location.href = '<%= BASE_PATH %>/admin';
     }
 
     document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -30,7 +30,7 @@
         const password = document.getElementById('password').value;
         
         try {
-            const res = await fetch('/blog/login', {
+            const res = await fetch('<%= BASE_PATH %>/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -39,7 +39,7 @@
             
             if (res.ok && data.data && data.data.token) {
                 localStorage.setItem('token', data.data.token);
-                window.location.href = '/admin';
+                window.location.href = '<%= BASE_PATH %>/admin';
             } else {
                 const errDiv = document.getElementById('error-message');
                 errDiv.textContent = data.error || data.message || 'Login gagal';

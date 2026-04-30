@@ -9,14 +9,14 @@
         </div>
 
         <div style="margin-bottom: 20px;">
-            <button onclick="document.getElementById('post-form').style.display='block'"
+            <button onclick="resetForm(); document.getElementById('post-form').style.display='block'"
                 style="padding: 10px 15px; background: #27ae60; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">+
                 Tulis Post Baru</button>
         </div>
 
         <div id="post-form"
             style="display: none; background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #ddd;">
-            <h3>Buat Postingan Baru</h3>
+            <h3 id="form-title">Buat Postingan Baru</h3>
             <form onsubmit="submitPost(event)">
                 <input type="text" id="post-title" placeholder="Judul" required
                     style="width: 100%; padding: 10px; margin-bottom: 15px; box-sizing: border-box;">
@@ -29,7 +29,7 @@
                 <button type="submit"
                     style="padding: 10px 15px; background: #3498db; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">Simpan
                     Post</button>
-                <button type="button" onclick="document.getElementById('post-form').style.display='none'"
+                <button type="button" onclick="resetForm()"
                     style="padding: 10px 15px; background: #95a5a6; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-left: 10px;">Batal</button>
             </form>
         </div>
@@ -54,29 +54,32 @@
     <script>
         const token = localStorage.getItem('token');
         if (!token) {
-            window.location.href = '/blog/login';
+            window.location.href = '<%= BASE_PATH %>/login';
         }
 
         function logout() {
             localStorage.removeItem('token');
-            window.location.href = '/blog/login';
+            window.location.href = '<%= BASE_PATH %>/login';
         }
+
+        let editingPostId = null;
 
         async function loadData() {
             try {
                 // Load Categories
-                const catRes = await fetch('/blog/categories', { headers: { 'Accept': 'application/json' } });
+                const catRes = await fetch('<%= BASE_PATH %>/categories', { headers: { 'Accept': 'application/json' } });
                 const categories = await catRes.json();
                 const catSelect = document.getElementById('post-category');
                 
                 if (Array.isArray(categories)) {
+                    catSelect.innerHTML = '<option value="">-- Pilih Kategori --</option>';
                     categories.forEach(c => {
                         catSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
                     });
                 }
 
                 // Load Posts
-                const postRes = await fetch('/blog/posts', { headers: { 'Accept': 'application/json' } });
+                const postRes = await fetch('<%= BASE_PATH %>/posts', { headers: { 'Accept': 'application/json' } });
                 const posts = await postRes.json();
                 const tbody = document.getElementById('admin-posts-list');
 
@@ -92,6 +95,7 @@
                         <td style="padding: 12px;">${p.title}</td>
                         <td style="padding: 12px;">${p.Category ? p.Category.name : '-'}</td>
                         <td style="padding: 12px;">
+                            <button onclick='openEditForm(${JSON.stringify(p).replace(/'/g, "&apos;")})' style="padding: 5px 10px; background: #f39c12; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px;">Edit</button>
                             <button onclick="deletePost(${p.id})" style="padding: 5px 10px; background: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">Hapus</button>
                         </td>
                     </tr>
@@ -102,15 +106,37 @@
             }
         }
 
+        function openEditForm(post) {
+            editingPostId = post.id;
+            document.getElementById('post-title').value = post.title;
+            document.getElementById('post-category').value = post.CategoryId || "";
+            document.getElementById('post-content').value = post.content;
+            document.getElementById('form-title').textContent = "Edit Postingan";
+            document.getElementById('post-form').style.display = 'block';
+            document.getElementById('post-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            editingPostId = null;
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-category').value = '';
+            document.getElementById('post-content').value = '';
+            document.getElementById('form-title').textContent = "Buat Postingan Baru";
+            document.getElementById('post-form').style.display = 'none';
+        }
+
         async function submitPost(e) {
             e.preventDefault();
             const title = document.getElementById('post-title').value;
             const categoryId = document.getElementById('post-category').value;
             const content = document.getElementById('post-content').value;
 
+            const url = editingPostId ? `<%= BASE_PATH %>/posts/${editingPostId}` : '<%= BASE_PATH %>/posts';
+            const method = editingPostId ? 'PUT' : 'POST';
+
             try {
-                const res = await fetch('/blog/posts', {
-                    method: 'POST',
+                const res = await fetch(url, {
+                    method: method,
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
@@ -119,10 +145,12 @@
                 });
 
                 if (res.ok) {
-                    alert('Berhasil membuat postingan!');
-                    window.location.reload();
+                    alert(editingPostId ? 'Berhasil memperbarui postingan!' : 'Berhasil membuat postingan!');
+                    resetForm();
+                    loadData();
                 } else {
-                    alert('Gagal membuat postingan.');
+                    const data = await res.json();
+                    alert('Gagal: ' + (data.error || data.message));
                 }
             } catch (e) {
                 alert('Error');
@@ -132,12 +160,12 @@
         async function deletePost(id) {
             if (!confirm('Yakin hapus?')) return;
             try {
-                const res = await fetch(`/blog/posts/${id}`, {
+                const res = await fetch(`<%= BASE_PATH %>/posts/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
-                    window.location.reload();
+                    loadData();
                 }
             } catch (e) {
                 alert('Gagal hapus');

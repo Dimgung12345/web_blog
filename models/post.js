@@ -21,6 +21,11 @@ export default (sequelize, DataTypes) => {
     pathID: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    slug: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true
     }
     // createdAt & updatedAt otomatis ada
   }, {});

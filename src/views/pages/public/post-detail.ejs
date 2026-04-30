@@ -3,7 +3,13 @@
 <div style="max-width: 800px; margin: 0 auto; background: white; padding: 20px; font-family: Arial, sans-serif;">
     <!-- Breadcrumb -->
     <div style="font-size: 13px; color: #e67e22; font-weight: bold; margin-bottom: 15px; text-transform: uppercase;">
-        BLOG.COM <span style="color: #ccc;">></span> <%= post.Category ? post.Category.name : 'NEWS' %>
+        <a href="<%= BASE_PATH %>" style="color: #e67e22; text-decoration: none;">BLOG.COM</a> 
+        <span style="color: #ccc;">></span> 
+        <% if (post.Category) { %>
+            <a href="<%= BASE_PATH %>/posts/category/<%= post.Category.slug %>" style="color: #e67e22; text-decoration: none;"><%= post.Category.name %></a>
+        <% } else { %>
+            NEWS
+        <% } %>
     </div>
 
     <!-- Title -->
