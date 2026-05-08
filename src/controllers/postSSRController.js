@@ -44,14 +44,7 @@ export const getPostBySlug = async (req, res) => {
         });
 
         if (!post) {
-            if (req.headers.accept && req.headers.accept.includes("json")) {
-                return res.status(404).json({ error: "Post tidak ditemukan" });
-            }
             return res.status(404).render("pages/public/404");
-        }
-
-        if (req.headers.accept && req.headers.accept.includes("json")) {
-            return res.json(post);
         }
 
         const contentHtml = marked.parse(post.content || "");
@@ -85,18 +78,10 @@ export const getPostBySlug = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
     try {
-        const isJson = req.headers.accept && req.headers.accept.includes("json");
-
         const posts = await Post.findAll({
-            attributes: isJson ? { exclude: ['content'] } : undefined,
             include: [{ model: Category }, { model: User, attributes: ['username'] }],
             order: [['createdAt', 'DESC']]
         });
-
-        if (isJson) {
-            return res.json(posts);
-        }
-
         const categories = await Category.findAll();
 
         res.render("pages/public/home", {
@@ -104,6 +89,51 @@ export const getAllPosts = async (req, res) => {
             categories,
             isLandingPage: false,
             title: "Semua Artikel - eBlog-RPL"
+        });
+    } catch (err) {
+        res.status(500).render("pages/public/404");
+    }
+};
+
+export const searchPosts = async (req, res) => {
+    try {
+        const { query } = req.query;
+        const posts = await Post.findAll({
+            where: {
+                title: { [db.Sequelize.Op.iLike]: `%${query}%` },
+            },
+            include: [{ model: Category }, { model: User, attributes: ["username"] }],
+            order: [["createdAt", "DESC"]],
+        });
+        const categories = await Category.findAll();
+        res.render("pages/public/home", { 
+            posts, 
+            categories, 
+            isLandingPage: false, 
+            q: query, 
+            title: `Hasil Pencarian: ${query}` 
+        });
+    } catch (err) {
+        res.status(500).render("pages/public/404");
+    }
+};
+
+export const getPostsByCategory = async (req, res) => {
+    try {
+        const category = await Category.findOne({ where: { slug: req.params.categorySlug } });
+        if (!category) return res.status(404).render("pages/public/404");
+
+        const posts = await Post.findAll({
+            where: { CategoryId: category.id },
+            include: [{ model: Category }, { model: User, attributes: ['username'] }],
+            order: [['createdAt', 'DESC']]
+        });
+        const categories = await Category.findAll();
+        res.render("pages/public/home", { 
+            posts, 
+            categories, 
+            isLandingPage: false, 
+            title: `Kategori: ${category.name}` 
         });
     } catch (err) {
         res.status(500).render("pages/public/404");

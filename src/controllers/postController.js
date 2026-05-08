@@ -59,31 +59,34 @@ export const createPost = async (req, res) => {
 };
 
 export const searchPosts = async (req, res) => {
-  const asd = req.query.q; // ambil keyword dari query string ?q=...
-  console.log("RIJAL - Search query:", asd);
-
-  const posts = await Post.findAll({
-    where: { title: { [Sequelize.Op.iLike]: `%${asd}%` } }
-  });
-  res.json(posts);
+  try {
+    const query = req.query.q;
+    const posts = await Post.findAll({
+      where: { title: { [Sequelize.Op.iLike]: `%${query}%` } },
+      include: [
+        { model: Category },
+        { model: db.User, attributes: ["username"] }
+      ]
+    });
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 export const getPostBySlug = async (req, res) => {
   try {
     const post = await Post.findOne({
-      where: {
-        slug: req.params.slug
-      },
+      where: { slug: req.params.slug },
       include: [
         { model: Category },
         { model: db.User, attributes: ["username"] }
       ]
-    })
-    if (!post) return res.status(404).render("pages/public/404");
-
-    res.render("pages/public/post-detail", { post });
-  } catch (err) {
-    res.render("pages/public/404")
+    });
+    if (!post) return res.status(404).json({ error: "Post tidak ditemukan" });
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -97,17 +100,9 @@ export const getPostByCategory = async (req, res) => {
       ],
       order: [['createdAt', 'DESC']]
     });
-
-    const categories = await Category.findAll();
-
-    res.render("pages/public/home", {
-      posts,
-      categories,
-      isLandingPage: false,
-      title: "Kategori - Blog"
-    });
-  } catch (err) {
-    res.status(500).render("pages/public/404");
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 // Update Post
