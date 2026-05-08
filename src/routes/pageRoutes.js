@@ -13,14 +13,12 @@ const router = express.Router();
 // Home Page
 router.get("/", async (req, res) => {
     try {
-        const allPosts = await Post.findAll({
+        const posts = await Post.findAll({
             include: [{ model: Category }, { model: User, attributes: ['username'] }],
             order: [['createdAt', 'DESC']],
         });
-        const featuredPost = allPosts[0] || null;
-        const posts = allPosts.slice(1, 7); // show next 6 posts in grid
         const categories = await Category.findAll();
-        res.render("pages/public/home", { posts, categories, featuredPost, isLandingPage: true });
+        res.render("pages/public/home", { posts, categories, isLandingPage: true });
     } catch (err) {
         res.status(500).send("Error loading home page: " + err.message);
     }
@@ -41,7 +39,7 @@ router.get("/search", async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
     const categories = await Category.findAll();
-    res.render("pages/public/home", { posts, categories, featuredPost: null, isLandingPage: false, q: query, title: `Search: ${query}` });
+    res.render("pages/public/home", { posts, categories, isLandingPage: false, q: query, title: `Search: ${query}` });
   } catch (err) {
     res.status(500).send("Error searching posts: " + err.message);
   }
@@ -59,7 +57,7 @@ router.get("/posts/category/:categorySlug", async (req, res) => {
             order: [['createdAt', 'DESC']]
         });
         const categories = await Category.findAll();
-        res.render("pages/public/home", { posts, categories, featuredPost: null, isLandingPage: false, title: `Category: ${category.name}` });
+        res.render("pages/public/home", { posts, categories, isLandingPage: false, title: `Category: ${category.name}` });
     } catch (err) {
         res.status(500).send("Error loading category: " + err.message);
     }

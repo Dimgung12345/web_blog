@@ -101,7 +101,6 @@ export const getAllPosts = async (req, res) => {
 
         res.render("pages/public/home", {
             posts,
-            featuredPost: null,
             categories,
             isLandingPage: false,
             title: "Semua Artikel - eBlog-RPL"

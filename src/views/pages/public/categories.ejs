@@ -1,10 +1,10 @@
-<%- include('../../partials/header', { title: 'Explore Categories - BlogSpace' }) %>
+<%- include('../../partials/header', { title: 'Kategori - eBlog-RPL' }) %>
 
 <section class="hero-post" style="padding: 4rem 0; text-align: left;">
     <div class="container">
-        <h1 style="font-size: 3rem; margin-bottom: 1rem; margin-left: 0;">Categories</h1>
+        <h1 style="font-size: 3rem; margin-bottom: 1rem; margin-left: 0;">Kategori</h1>
         <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 600px;">
-            Browse our articles by topic to find the insights that matter most to your development workflow.
+            Telusuri artikel kami berdasarkan topik untuk menemukan insight yang paling relevan bagi Anda.
         </p>
     </div>
 </section>
@@ -17,11 +17,11 @@
                     <% categories.forEach(cat => { %>
                         <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" class="post-card" style="display: block; padding: 3rem 2rem; text-align: center; border-radius: 16px; border: 1px solid var(--border-color); background: #fff;">
                             <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-main);"><%= cat.name %></h3>
-                            <span style="font-weight: 600; color: var(--primary-color);">View Articles &rarr;</span>
+                            <span style="font-weight: 600; color: var(--primary-color);">Lihat Artikel &rarr;</span>
                         </a>
                     <% }) %>
                 <% } else { %>
-                    <p style="color: var(--text-muted); grid-column: 1 / -1; font-size: 1.1rem; padding: 2rem 0;">No categories found yet.</p>
+                    <p style="color: var(--text-muted); grid-column: 1 / -1; font-size: 1.1rem; padding: 2rem 0;">Belum ada kategori.</p>
                 <% } %>
             </div>
         </div>
