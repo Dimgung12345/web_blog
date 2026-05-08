@@ -21,6 +21,22 @@ const toSlug = (text) => {
     .replace(/--+/g, '-');
 };
 
+// Get All Posts (API)
+export const getAllPosts = async (req, res) => {
+  try {
+    const posts = await Post.findAll({
+      include: [
+        { model: Category },
+        { model: db.User, attributes: ["username"] }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // Create Post
 export const createPost = async (req, res) => {
   try {

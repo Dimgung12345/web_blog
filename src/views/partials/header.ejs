@@ -1,49 +1,40 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= typeof title !=='undefined' ? title : 'Blog' %>
-    </title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            margin-left: 15px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-    </style>
+    <title><%= typeof title !== 'undefined' ? title : 'eBlog-RPL' %></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
-
 <body>
     <header>
-        <div style="font-size: 1.5em; font-weight: bold;"><a href="<%= BASE_PATH %>" style="margin-left:0;">Blog</a></div>
-        <nav>
-            <a href="<%= BASE_PATH %>">Beranda</a>
-        </nav>
+        <div class="container header-inner">
+            <a href="<%= BASE_PATH %>" class="logo">eBlog-RPL</a>
+            <nav>
+                <ul>
+                    <li><a href="<%= BASE_PATH %>">Home</a></li>
+                    <li><a href="<%= BASE_PATH %>/posts">All Posts</a></li>
+                    <li><a href="<%= BASE_PATH %>/categories">Categories</a></li>
+                </ul>
+            </nav>
+            <form action="<%= BASE_PATH %>/search" method="GET" style="display: flex; align-items: center; gap: 0.5rem;">
+                <input
+                    type="search"
+                    name="query"
+                    placeholder="Search..."
+                    style="padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; font-family: var(--font-main); outline: none; width: 180px; transition: border-color 0.2s;"
+                    onfocus="this.style.borderColor='var(--primary-color)'"
+                    onblur="this.style.borderColor='var(--border-color)'"
+                >
+                <button type="submit" style="padding: 0.5rem 1rem; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='var(--primary-hover)'" onmouseout="this.style.background='var(--primary-color)'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                </button>
+            </form>
+        </div>
     </header>
-    <main class="container">
+    <main>
