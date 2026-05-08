@@ -1,4 +1,5 @@
 import db from "../../models/index.js";
+import { savFile } from "../cdn/tempt.js";
 const { Media, Post } = db;
 
 // Create media
@@ -12,8 +13,15 @@ export const create = async (req, res) => {
 
     // Simpan path relatif ke storage
     const url = `/storage/${type}/${req.file.filename}`;
-
-    const media = await Media.create({ url, type, caption, PostId });
+    // Hybrid: simpan ke internal + coba upload ke external
+    const result = await savFile(req.file, type);
+    // Simpan ke DB: pakai external kalau ada, fallback ke internal
+    const media = await Media.create({
+      url: result.external || result.internal,
+      type,
+      caption,
+      PostId,
+    });
     res.status(201).json(media);
   } catch (err) {
     res.status(500).json({ error: err.message });
