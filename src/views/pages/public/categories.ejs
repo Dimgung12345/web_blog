@@ -1,25 +1,30 @@
-<%- include('../../partials/header', { title: 'Kategori - Blog' }) %>
+<%- include('../../partials/header', { title: 'Kategori - eBlog-RPL' }) %>
 
-<div style="max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-    <h1 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 30px;">Semua Kategori</h1>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
-        <% if (categories.length === 0) { %>
-            <p>Belum ada kategori.</p>
-        <% } else { %>
-            <% categories.forEach(cat => { %>
-                <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" style="text-decoration: none;">
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; border: 1px solid #eee; transition: 0.3s; color: #333;" onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#f8f9fa'">
-                        <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 5px;"><%= cat.name %></div>
-                        <div style="color: #777; font-size: 0.9em;">Lihat Artikel &rarr;</div>
-                    </div>
-                </a>
-            <% }) %>
-        <% } %>
+<section class="hero-post" style="padding: 4rem 0; text-align: left;">
+    <div class="container">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem; margin-left: 0;">Kategori</h1>
+        <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 600px;">
+            Telusuri artikel kami berdasarkan topik untuk menemukan insight yang paling relevan bagi Anda.
+        </p>
     </div>
+</section>
 
-    <div style="margin-top: 40px; text-align: center;">
-        <a href="<%= BASE_PATH %>" style="color: #3498db; text-decoration: none; font-weight: bold;">&larr; Kembali ke Beranda</a>
+<div class="container">
+    <div class="post-layout" style="grid-template-columns: 1fr; padding: 4rem 0;">
+        <div class="categories-content">
+            <div class="posts-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
+                <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                    <% categories.forEach(cat => { %>
+                        <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" class="post-card" style="display: block; padding: 3rem 2rem; text-align: center; border-radius: 16px; border: 1px solid var(--border-color); background: #fff;">
+                            <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-main);"><%= cat.name %></h3>
+                            <span style="font-weight: 600; color: var(--primary-color);">Lihat Artikel &rarr;</span>
+                        </a>
+                    <% }) %>
+                <% } else { %>
+                    <p style="color: var(--text-muted); grid-column: 1 / -1; font-size: 1.1rem; padding: 2rem 0;">Belum ada kategori.</p>
+                <% } %>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -1,31 +1,25 @@
 import db from "../../models/index.js";
-import { savFile } from "../cdn/tempt.js";
+import { saveFileHybrid } from "../cdn/tempt.js";
 const { Media, Post } = db;
 
-// Create media
 export const create = async (req, res) => {
-  try {
-    const { type, caption, PostId } = req.body;
+    try {
+        const { type, caption, PostId } = req.body;
+        if (!req.file) return res.status(400).json({ error: "File is required" });
 
-    if (!req.file) {
-      return res.status(400).json({ error: "File is required" });
+        const result = await saveFileHybrid(req.file, type);
+
+        const media = await Media.create({
+            url: result.external || result.internal,
+            type,
+            caption,
+            PostId,
+        });
+
+        res.status(201).json(media);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
-
-    // Hybrid: simpan ke internal + coba upload ke external
-    const result = await saveFileHybrid(req.file, type);
-
-    // Simpan ke DB: pakai external kalau ada, fallback ke internal
-    const media = await Media.create({
-      url: result.external || result.internal,
-      type,
-      caption,
-      PostId,
-    });
-
-    res.status(201).json(media);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
 };
 
 

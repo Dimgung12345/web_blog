@@ -4,6 +4,7 @@ import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+router.get("/", postController.getAllPosts);
 router.get("/search", postController.searchPosts);
 router.get("/:slug", postController.getPostBySlug);
 router.get("/category/:categoryId", postController.getPostByCategory);
