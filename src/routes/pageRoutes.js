@@ -1,7 +1,8 @@
-import express from "express";
+import express, { response } from "express";
 import db from "../../models/index.js";
 import { login } from "../controllers/userController.js";
 import * as postSSRController from "../controllers/postSSRController.js";
+import { authMiddleware } from "../middleware/authMiddleware.js"
 
 const { Post, Category, User } = db;
 const router = express.Router();
@@ -51,6 +52,7 @@ router.get("/categories", async (req, res) => {
  */
 router.get("/login", (req, res) => res.render("pages/auth/login"));
 router.post("/login", login);
-router.get("/admin", (req, res) => res.render("pages/admin/dashboard"));
+router.get("/admin",  authMiddleware, (req, res) => res.render("pages/admin/dashboard"));
+router.get("/inspect", (req, res) => res.send(req.cookies))
 
 export default router;

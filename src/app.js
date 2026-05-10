@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
+import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
 
 import postRoutes from "./routes/postRoutes.js";
@@ -9,6 +10,7 @@ import userRoutes from "./routes/userRoutes.js";
 import mediaRoutes from "./routes/mediaRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import pageRoutes from "./routes/pageRoutes.js";
+
 
 dotenv.config();
 const app = express();
@@ -24,6 +26,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors());
+app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(`${BASE_PATH}/storage`, express.static("storage"));
