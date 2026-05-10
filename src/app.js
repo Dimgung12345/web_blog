@@ -11,7 +11,6 @@ import mediaRoutes from "./routes/mediaRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import pageRoutes from "./routes/pageRoutes.js";
 
-
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
