@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
+import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
 
 import postRoutes from "./routes/postRoutes.js";
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors());
+app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(`${BASE_PATH}/storage`, express.static("storage"));
