@@ -4,11 +4,6 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
-    },
-    slug: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true
     }
     // createdAt & updatedAt otomatis ada
   }, {});
