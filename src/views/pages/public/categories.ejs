@@ -1,5 +1,14 @@
 <%- include('../../partials/header', { title: 'Kategori - eBlog-RPL' }) %>
 
+<%
+var catColors = ['#0069ff','#8b5cf6','#10b981','#f59e0b','#ef4444','#ec4899','#06b6d4','#f97316'];
+function catColor(name) {
+    var h = 0;
+    for (var i = 0; i < name.length; i++) { h = ((h << 5) - h) + name.charCodeAt(i); h |= 0; }
+    return catColors[Math.abs(h) % catColors.length];
+}
+%>
+
 <section class="hero-post" style="padding: 4rem 0; text-align: left;">
     <div class="container">
         <h1 style="font-size: 3rem; margin-bottom: 1rem; margin-left: 0;">Kategori</h1>
@@ -9,22 +18,15 @@
     </div>
 </section>
 
-<div class="container">
-    <div class="post-layout" style="grid-template-columns: 1fr; padding: 4rem 0;">
-        <div class="categories-content">
-            <div class="posts-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem;">
-                <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
-                    <% categories.forEach(cat => { %>
-                        <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" class="post-card" style="display: block; padding: 3rem 2rem; text-align: center; border-radius: 16px; border: 1px solid var(--border-color); background: #fff;">
-                            <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-main);"><%= cat.name %></h3>
-                            <span style="font-weight: 600; color: var(--primary-color);">Lihat Artikel &rarr;</span>
-                        </a>
-                    <% }) %>
-                <% } else { %>
-                    <p style="color: var(--text-muted); grid-column: 1 / -1; font-size: 1.1rem; padding: 2rem 0;">Belum ada kategori.</p>
-                <% } %>
-            </div>
-        </div>
+<div class="container" style="padding: 2rem 0 5rem;">
+    <div class="category-tags">
+        <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+            <% categories.forEach(cat => { %>
+                <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" class="category-tag-pill" style="background-color: <%= catColor(cat.name) %>;"><%= cat.name %></a>
+            <% }) %>
+        <% } else { %>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Belum ada kategori.</p>
+        <% } %>
     </div>
 </div>
 

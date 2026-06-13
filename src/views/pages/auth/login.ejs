@@ -35,7 +35,7 @@
             const data = await res.json();
             if (res.ok && data.data && data.data.token) {
                 // Jangan make localStorage coeg.
-                document.cookie = 'linux_rijal=' + data.data.token + "; path=/; domain=localhost; SameSite=Lax; max-age=${7 * 24 * 60 * 60}`;"
+                document.cookie = 'linux_rijal=' + data.data.token + '; path=/; domain=localhost; SameSite=Lax; max-age=' + (7 * 24 * 60 * 60);
                 window.location.href = '<%= BASE_PATH %>/admin';
             } else {
                 const errDiv = document.getElementById('error-message');
