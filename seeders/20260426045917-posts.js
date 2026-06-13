@@ -3,6 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
+    const users = await queryInterface.sequelize.query('SELECT id FROM "Users" LIMIT 1', { type: Sequelize.QueryTypes.SELECT });
+    const categories = await queryInterface.sequelize.query('SELECT id FROM "Categories" LIMIT 1', { type: Sequelize.QueryTypes.SELECT });
+
+    const userId = users[0].id;
+    const categoryId = categories[0].id;
+
     await queryInterface.bulkInsert("Posts", [
       {
         title: "[Uji Coba Tampilan] Panduan Lengkap Membangun Ekosistem Digital yang Berkelanjutan",
@@ -78,8 +84,8 @@ async function fetchWithTimeout(resource, options = {}) {
 # Kesimpulan
 Membangun ekosistem adalah perjalanan marathon, bukan sprint. Fokuslah pada nilai jangka panjang.`,
         slug: "panduan-lengkap-membangun-ekosistem-digital",
-        UserId: 1,
-        CategoryId: 1,
+        UserId: userId,
+        CategoryId: categoryId,
         createdAt: new Date(),
         updatedAt: new Date(),
       }
