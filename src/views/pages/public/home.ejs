@@ -27,9 +27,9 @@ function catColor(name) {
     </div>
 
     <div class="container" style="padding-top: 3rem; padding-bottom: 5rem; max-width: 1400px;">
-        <div class="post-layout" style="grid-template-columns: 1fr 300px; gap: 4rem;">
+        <div class="post-layout" style="grid-template-columns: 1fr 300px; gap: 4rem; align-items: start;">
             <section class="posts-content" style="padding-left: 1.5rem; padding-right: 1rem;">
-                <h2 style="font-family: var(--font-heading); margin-bottom: 2.5rem; font-size: 2rem;">Artikel Terbaru</h2>
+                <h2 style="font-family: var(--font-heading); margin-bottom: 2.5rem; font-size: 2rem; margin-top: 0;">Artikel Terbaru</h2>
 
                 <div class="posts-grid"
                     style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2.5rem;">
@@ -78,12 +78,12 @@ function catColor(name) {
                 </div>
             </section>
 
-            <aside class="right-sidebar">
-                <div class="sidebar-widget">
-                    <h4 style="font-family: var(--font-heading); margin-bottom: 1.5rem;">Jelajahi Kategori</h4>
+            <aside class="right-sidebar" style="padding-top: 0;">
+                <div class="sidebar-widget" style="margin-top: 0;">
+                    <h4 style="font-family: var(--font-heading); margin-bottom: 1.5rem; margin-top: 0;">Jelajahi Kategori</h4>
                     <div class="sidebar-cat-tags">
-                        <% if (categories && categories.length> 0) { %>
-                            <% categories.forEach(cat=> { %>
+                        <% if (categories && categories.length > 0) { %>
+                            <% categories.forEach(cat => { %>
                                 <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" class="cat-badge" style="background-color: <%= catColor(cat.name) %>; color: #fff !important;"><%= cat.name %></a>
                             <% }) %>
                         <% } else { %>

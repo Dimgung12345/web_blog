@@ -9,20 +9,29 @@ function catColor(name) {
 }
 %>
 
-<section class="hero-post" style="padding: 4rem 0; text-align: left;">
+<section class="hero-post" style="padding: 4rem 0 3rem; text-align: left; background: linear-gradient(180deg, #f8f9ff 0%, #fff 100%);">
     <div class="container">
-        <h1 style="font-size: 3rem; margin-bottom: 1rem; margin-left: 0;">Kategori</h1>
-        <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 600px;">
+        <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem; margin-left: 0; font-weight: 900; letter-spacing: -0.02em;">Kategori</h1>
+        <p style="color: var(--text-muted); font-size: 1.3rem; max-width: 700px; line-height: 1.6;">
             Telusuri artikel kami berdasarkan topik untuk menemukan insight yang paling relevan bagi Anda.
         </p>
     </div>
 </section>
 
-<div class="container" style="padding: 2rem 0 5rem;">
-    <div class="category-tags">
+<div class="container" style="padding: 3rem 0 5rem; max-width: 1200px;">
+    <div class="masonry-grid" style="column-count: 3; column-gap: 20px; padding: 0 1rem;">
         <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
-            <% categories.forEach(cat => { %>
-                <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" class="category-tag-pill" style="background-color: <%= catColor(cat.name) %>;"><%= cat.name %></a>
+            <% categories.forEach((cat, idx) => { 
+                var sizes = [
+                    { padding: '20px 28px', fontSize: '1.3rem', borderRadius: '16px' },
+                    { padding: '16px 24px', fontSize: '1.1rem', borderRadius: '14px' },
+                    { padding: '24px 32px', fontSize: '1.4rem', borderRadius: '18px' },
+                    { padding: '14px 20px', fontSize: '1rem', borderRadius: '12px' },
+                    { padding: '18px 26px', fontSize: '1.2rem', borderRadius: '15px' }
+                ];
+                var size = sizes[idx % sizes.length];
+            %>
+                <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" class="category-masonry-item" style="background-color: <%= catColor(cat.name) %>; padding: <%= size.padding %>; border-radius: <%= size.borderRadius %>; color: #fff; font-weight: 700; font-size: <%= size.fontSize %>; text-decoration: none; display: block; margin-bottom: 20px; break-inside: avoid; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px) scale(1.02)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'"><%= cat.name %></a>
             <% }) %>
         <% } else { %>
             <p style="color: var(--text-muted); font-size: 1.1rem;">Belum ada kategori.</p>

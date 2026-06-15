@@ -540,6 +540,11 @@ nav ul li a:hover::after {
 
 .sidebar-widget {
     margin-bottom: 3rem;
+    margin-top: 0;
+}
+
+.sidebar-widget:first-child {
+    margin-top: 0;
 }
 
 .sidebar-widget h4 {
@@ -547,6 +552,7 @@ nav ul li a:hover::after {
     text-transform: uppercase;
     color: var(--text-main);
     margin-bottom: 1.5rem;
+    margin-top: 0;
     font-weight: 700;
 }
 
@@ -735,6 +741,20 @@ footer {
     .right-sidebar {
         position: static;
         order: 2;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .right-sidebar .sidebar-widget {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .right-sidebar .sidebar-widget h4 {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
     }
 
     .toc-sidebar {
@@ -808,10 +828,11 @@ footer {
         padding: 1.25rem 1rem;
         border-bottom: 1px solid var(--border-color);
         font-weight: 700;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--text-muted);
+        color: var(--text-main);
+        background: linear-gradient(135deg, rgba(0,105,255,0.03) 0%, rgba(139,92,246,0.03) 100%);
     }
 
     .mobile-toc-close {

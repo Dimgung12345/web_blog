@@ -47,10 +47,22 @@ var sliceBg = 'linear-gradient(180deg, rgba('+rgb+',0.08) 0%, rgba('+rgb+',0.03)
         </button>
         <div class="mobile-toc-panel" id="mobile-toc-panel">
             <div class="mobile-toc-panel-header">
-                <span>Daftar Isi</span>
                 <button class="mobile-toc-close" id="mobile-toc-close" aria-label="Close">&times;</button>
             </div>
             <ul class="toc-list" id="toc-mobile">
+                <li class="toc-item toc-header-item" style="padding: 12px 16px; border-bottom: 1px solid var(--border-color); margin-bottom: 8px;">
+                    <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                        Daftar Isi
+                    </span>
+                </li>
                 <% toc.forEach((item, index) => { %>
                     <li class="toc-item <%= index === 0 ? 'active' : '' %>">
                         <a href="#<%= item.id %>" style="padding-left: <%= 16 + (item.level - 1) * 16 %>px;">
