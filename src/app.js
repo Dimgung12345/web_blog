@@ -10,6 +10,7 @@ import userRoutes from "./routes/userRoutes.js";
 import mediaRoutes from "./routes/mediaRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import pageRoutes from "./routes/pageRoutes.js";
+import popularityRoutes from "./routes/popularityRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -41,6 +42,7 @@ app.use(`${BASE_PATH}/api/posts`, postRoutes);
 app.use(`${BASE_PATH}/api/users`, userRoutes);
 app.use(`${BASE_PATH}/api/media`, mediaRoutes);
 app.use(`${BASE_PATH}/api/categories`, categoryRoutes);
+app.use(`${BASE_PATH}/api/popularity`, popularityRoutes);
 
 // Page Routes (SSR)
 app.use(BASE_PATH, pageRoutes);

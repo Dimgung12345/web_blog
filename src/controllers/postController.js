@@ -1,5 +1,5 @@
 import db from "../../models/index.js";
-const { Post, Category, Sequelize } = db;
+const { Post, Category, Sequelize, Popularity } = db;
 
 function generateSlug(title) {
   return title
@@ -53,6 +53,31 @@ export const createPost = async (req, res) => {
     });
 
     res.status(201).json(newPost);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getPostById = async (req, res) => {
+  try {
+    const post = await Post.findByPk(req.params.id, {
+      include: [
+        { model: Category },
+        { model: db.User, attributes: ["username"] }
+      ]
+    });
+
+    if (!post) return res.status(404).json({ error: "Post tidak ditemukan" });
+
+    // Auto increment views di Popularity
+    let stats = await Popularity.findOne({ where: { PostId: post.id } });
+    if (!stats) {
+      stats = await Popularity.create({ PostId: post.id, views: 0 });
+    }
+    await stats.increment("views");
+    await stats.reload();
+
+    res.json({ id: post.id, title: post.title, content: post.content, slug: post.slug, category: post.Category, user: post.User, views: stats.views});
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
