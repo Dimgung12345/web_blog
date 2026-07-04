@@ -49,7 +49,7 @@ export const createPost = async (req, res) => {
       CategoryId,
       pathID,
       slug,
-      UserId: req.user.id // ambil dari token
+      UserId: req.internalUserId
     });
 
     res.status(201).json(newPost);

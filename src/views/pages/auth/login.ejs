@@ -18,7 +18,7 @@
 </div>
 
 <script>
-    if (document.cookie.indexOf("linux_rijal") !== -1) {
+    if (document.cookie.indexOf("session_id") !== -1) {
         window.location.href = '<%= BASE_PATH %>/admin';
     }
 
@@ -32,12 +32,10 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
-            const data = await res.json();
-            if (res.ok && data.data && data.data.token) {
-                // Jangan make localStorage coeg.
-                document.cookie = 'linux_rijal=' + data.data.token + "; path=/; domain=localhost; SameSite=Lax; max-age=${7 * 24 * 60 * 60}`;"
+            if (res.ok) {
                 window.location.href = '<%= BASE_PATH %>/admin';
             } else {
+                const data = await res.json();
                 const errDiv = document.getElementById('error-message');
                 errDiv.textContent = data.error || data.message || 'Login gagal';
                 errDiv.style.display = 'block';

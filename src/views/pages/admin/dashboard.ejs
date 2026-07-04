@@ -168,12 +168,10 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>
-        const token = localStorage.getItem('token');
-        if (!token) window.location.href = '<%= BASE_PATH %>/login';
-
         function logout() {
-            localStorage.removeItem('token');
-            window.location.href = '<%= BASE_PATH %>/login';
+            fetch('<%= BASE_PATH %>/logout', { method: 'POST' }).then(() => {
+                window.location.href = '<%= BASE_PATH %>/login';
+            });
         }
 
         function switchTab(tab) {
@@ -306,7 +304,7 @@
             const method = editingPostId ? 'PUT' : 'POST';
             const res = await fetch(url, {
                 method,
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             });
             if (res.ok) { toggleEditor(false); loadData(); } else { alert('Error saving post'); }
@@ -317,14 +315,14 @@
             const name = document.getElementById('cat-name').value;
             const res = await fetch('<%= BASE_PATH %>/api/categories', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name })
             });
             if (res.ok) { document.getElementById('cat-name').value = ''; loadData(); } else { alert('Error saving category'); }
         }
 
-        async function deletePost(id) { if (confirm('Hapus post ini?')) { await fetch(`<%= BASE_PATH %>/api/posts/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); loadData(); } }
-        async function deleteCategory(id) { if (confirm('Hapus kategori ini? Semua post terkait akan kehilangan kategori.')) { await fetch(`<%= BASE_PATH %>/api/categories/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); loadData(); } }
+        async function deletePost(id) { if (confirm('Hapus post ini?')) { await fetch(`<%= BASE_PATH %>/api/posts/${id}`, { method: 'DELETE' }); loadData(); } }
+        async function deleteCategory(id) { if (confirm('Hapus kategori ini? Semua post terkait akan kehilangan kategori.')) { await fetch(`<%= BASE_PATH %>/api/categories/${id}`, { method: 'DELETE' }); loadData(); } }
 
         loadData();
     </script>
