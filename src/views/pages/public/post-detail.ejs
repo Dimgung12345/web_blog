@@ -1,12 +1,6 @@
 <%- include('../../partials/header') %>
 
 <%
-var catColors = ['#0069ff','#8b5cf6','#10b981','#f59e0b','#ef4444','#ec4899','#06b6d4','#f97316'];
-function catColor(name) {
-    var h = 0;
-    for (var i = 0; i < name.length; i++) { h = ((h << 5) - h) + name.charCodeAt(i); h |= 0; }
-    return catColors[Math.abs(h) % catColors.length];
-}
 var catName = post.Category ? post.Category.name : 'General';
 var color = catColor(catName);
 function hexToRgb(hex) {
@@ -47,10 +41,22 @@ var sliceBg = 'linear-gradient(180deg, rgba('+rgb+',0.08) 0%, rgba('+rgb+',0.03)
         </button>
         <div class="mobile-toc-panel" id="mobile-toc-panel">
             <div class="mobile-toc-panel-header">
-                <span>Daftar Isi</span>
                 <button class="mobile-toc-close" id="mobile-toc-close" aria-label="Close">&times;</button>
             </div>
             <ul class="toc-list" id="toc-mobile">
+                <li class="toc-item toc-header-item" style="padding: 12px 16px; border-bottom: 1px solid var(--border-color); margin-bottom: 8px;">
+                    <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                        Daftar Isi
+                    </span>
+                </li>
                 <% toc.forEach((item, index) => { %>
                     <li class="toc-item <%= index === 0 ? 'active' : '' %>">
                         <a href="#<%= item.id %>" style="padding-left: <%= 16 + (item.level - 1) * 16 %>px;">
@@ -79,45 +85,122 @@ var sliceBg = 'linear-gradient(180deg, rgba('+rgb+',0.08) 0%, rgba('+rgb+',0.03)
         </article>
 
         <aside class="right-sidebar">
+            <div class="sidebar-widget" x-data="{
+                liked: false,
+                count: 0,
+                loading: false,
+                init() {
+                    fetch('<%= BASE_PATH %>/api/likes/<%= post.id %>/count').then(r=>r.json()).then(d=>{ this.count = d.count }).catch(()=>{});
+                    fetch('<%= BASE_PATH %>/api/likes/<%= post.id %>/check').then(r=>r.ok?r.json():{liked:false}).then(d=>{ this.liked = d.liked }).catch(()=>{});
+                },
+                toggle() {
+                    if (this.loading) return;
+                    this.loading = true;
+                    fetch('<%= BASE_PATH %>/api/likes/<%= post.id %>/toggle', { method:'POST' })
+                        .then(r=>r.ok?r.json():Promise.reject())
+                        .then(d=>{ this.liked = d.liked; this.count = d.count })
+                        .catch(()=>{ alert('Silakan login untuk memberi like'); })
+                        .finally(()=>{ this.loading = false });
+                }
+            }">
+                <h4 style="margin-bottom: 1rem;">Suka</h4>
+                <button @click="toggle()" :disabled="loading" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 2px solid var(--border-color); border-radius: 999px; background: white; cursor: pointer; font-size: 1rem; font-weight: 600; color: var(--text-main); transition: all 0.2s; width: 100%; justify-content: center;"
+                :style="liked ? 'border-color: #e11d48; background: #fff1f2; color: #e11d48;' : ''">
+                    <svg x-show="!liked" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                    </svg>
+                    <svg x-show="liked" width="20" height="20" viewBox="0 0 24 24" fill="#e11d48" stroke="#e11d48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                    </svg>
+                    <span x-text="count"></span>
+                    <span x-show="loading" style="font-size:0.75rem; color:var(--text-muted);">...</span>
+                </button>
+            </div>
+
             <div class="sidebar-widget">
                 <h4>Bagikan</h4>
                 <div class="social-share-buttons">
-                    <a href="#" class="share-btn" title="Share on Twitter">
+                    <a href="#" class="share-btn" title="Bagikan ke Twitter">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
                     </a>
-                    <a href="#" class="share-btn" title="Share on Facebook">
+                    <a href="#" class="share-btn" title="Bagikan ke Facebook">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
                     </a>
-                    <a href="#" class="share-btn" title="Share on LinkedIn">
+                    <a href="#" class="share-btn" title="Bagikan ke LinkedIn">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"></path></svg>
                     </a>
                 </div>
             </div>
 
             <div class="sidebar-widget">
-                <h4>Kategori</h4>
-                <div class="sidebar-cat-tags">
-                    <% categories.forEach(cat => { %>
-                        <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" class="cat-badge" style="background-color: <%= catColor(cat.name) %>; color: #fff !important;"><%= cat.name %></a>
-                    <% }) %>
+                <h4>Jelajahi Kategori</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start; margin-top: 1rem;">
+                    <% 
+                        var currentCatId = post.Category ? post.Category.id : null;
+                        var displayCats = [];
+                        if (post.Category) {
+                            displayCats.push(post.Category);
+                        }
+                        if (categories && categories.length > 0) {
+                            categories.forEach(cat => {
+                                if (!currentCatId || cat.id !== currentCatId) {
+                                    displayCats.push(cat);
+                                }
+                            });
+                        }
+                        displayCats = displayCats.slice(0, 4);
+                    %>
+                    <% if (displayCats.length > 0) { %>
+                        <% displayCats.forEach(cat => { %>
+                            <% 
+                                var isCurrent = (currentCatId && cat.id === currentCatId);
+                                var badgeBg = isCurrent ? '#94a3b8' : catColor(cat.name);
+                            %>
+                            <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" class="cat-badge" style="background-color: <%= badgeBg %>; color: #fff !important; padding: 8px 18px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; text-align: center; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px rgba(0,0,0,0.08);" onmouseover="this.style.transform='translateY(-2px) scale(1.02)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.08)'"><%= cat.name %></a>
+                        <% }) %>
+                    <% } else { %>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">Belum ada kategori.</p>
+                    <% } %>
                 </div>
             </div>
 
-            <% if (relatedPosts && relatedPosts.length > 0) { %>
-            <div class="sidebar-widget">
-                <h4>Artikel Terkait</h4>
-                <ul class="related-articles">
-                    <% relatedPosts.forEach(rel => { %>
-                        <li class="related-item">
-                            <a href="<%= BASE_PATH %>/posts/<%= rel.slug %>"><%= rel.title %></a>
-                            <span><%= new Date(rel.createdAt).toLocaleDateString() %></span>
-                        </li>
-                    <% }) %>
-                </ul>
-            </div>
-            <% } %>
         </aside>
     </div>
+
+    <% if (relatedPosts && relatedPosts.length > 0) { %>
+        <section class="related-posts-section" style="margin-top: 5rem; padding-top: 3rem; border-top: 1.5px dashed #e2e8f0; width: 100%; margin-bottom: 2rem;">
+            <h3 style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 850; margin-bottom: 2rem; color: var(--text-main); letter-spacing: -0.02em;">Postingan Relevan</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
+                <% relatedPosts.slice(0, 3).forEach(rel => { %>
+                    <article class="post-card-latest" style="background: white; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.02)'">
+                        <a href="<%= BASE_PATH %>/posts/<%= rel.slug %>" style="display: block; width: 100%; aspect-ratio: 16/10; overflow: hidden; border-bottom: 1px solid #edf2f7; background: linear-gradient(135deg, #f0f4ff 0%, #dbeafe 100%);">
+                            <img src="https://placehold.co/800x500" alt="<%= rel.title %>" style="width: 100%; height: 100%; object-fit: cover;">
+                        </a>
+                        <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column;">
+                            <% if (rel.Category) { %>
+                                <span style="background-color: <%= catColor(rel.Category.name) %>15; color: <%= catColor(rel.Category.name) %>; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; width: max-content; margin-bottom: 1rem; display: inline-block;"><%= rel.Category.name %></span>
+                            <% } %>
+                            <h4 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 800; line-height: 1.35; margin: 0 0 0.75rem;">
+                                <a href="<%= BASE_PATH %>/posts/<%= rel.slug %>" style="color: var(--text-main); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#0069ff'" onmouseout="this.style.color='var(--text-main)'"><%= rel.title %></a>
+                            </h4>
+                            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+                                <span><%= rel.User ? rel.User.username : 'Admin' %></span>
+                                <span style="opacity: 0.5;">•</span>
+                                <span><%= new Date(rel.createdAt).toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
+                            </div>
+                            <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin: 0 0 1.25rem; flex: 1;">
+                                <%= rel.content.replace(/[#*`]/g, '').substring(0, 120) %>...
+                            </p>
+                            <a href="<%= BASE_PATH %>/posts/<%= rel.slug %>" class="read-more-link" style="color: var(--text-main); font-weight: 700; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: color 0.2s; width: max-content;" onmouseover="this.style.color='#0069ff'; this.querySelector('svg').style.transform='translateX(4px)';" onmouseout="this.style.color='var(--text-main)'; this.querySelector('svg').style.transform='translateX(0)';">
+                                Baca selengkapnya
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transition: transform 0.2s;">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </article>
+                <% }) %>
+            </div>
+        </section>
+    <% } %>
 </div>
 
 <script>

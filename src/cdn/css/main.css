@@ -113,9 +113,8 @@ nav ul li a:hover::after {
 }
 
 .hero-slice {
-    background: linear-gradient(180deg, #eef3ff 0%, #f8faff 40%, #fff 100%);
+    background: linear-gradient(180deg, #eef3ff 0%, #f8faff 45%, #ffffff 100%);
     padding-bottom: 3rem;
-    border-bottom: 1px solid var(--border-color);
 }
 
 .hero-slice-post {
@@ -124,6 +123,10 @@ nav ul li a:hover::after {
 .hero-search {
     padding: 4rem 0 2rem;
     text-align: center;
+    min-height: calc(100vh - 150px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .hero-search-title {
@@ -153,11 +156,12 @@ nav ul li a:hover::after {
     border-radius: 14px;
     padding: 6px 6px 6px 16px;
     transition: border-color 0.25s, box-shadow 0.25s;
+    box-shadow: 0 10px 25px -5px rgba(0, 105, 255, 0.05), 0 8px 10px -6px rgba(0, 105, 255, 0.05);
 }
 
 .hero-search-form:focus-within {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(0, 105, 255, 0.08);
+    box-shadow: 0 0 0 4px rgba(0, 105, 255, 0.08), 0 10px 25px -5px rgba(0, 105, 255, 0.05);
 }
 
 .hero-search-icon {
@@ -540,6 +544,11 @@ nav ul li a:hover::after {
 
 .sidebar-widget {
     margin-bottom: 3rem;
+    margin-top: 0;
+}
+
+.sidebar-widget:first-child {
+    margin-top: 0;
 }
 
 .sidebar-widget h4 {
@@ -547,6 +556,7 @@ nav ul li a:hover::after {
     text-transform: uppercase;
     color: var(--text-main);
     margin-bottom: 1.5rem;
+    margin-top: 0;
     font-weight: 700;
 }
 
@@ -674,8 +684,34 @@ footer {
         padding: 0 16px;
     }
 
+    .hero-grid-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 2rem !important;
+    }
+
+    .hero-item-featured {
+        order: 0 !important;  
+    }
+
+    .hero-item-categories {
+        order: 1 !important;  
+    }
+
+    .hero-item-trending {
+        order: 2 !important;  
+    }
+
+    .container > div[style*="grid-template-columns"] {
+        padding: 0 !important;
+    }
+
     .hero-search {
         padding: 2.5rem 0 2rem;
+        min-height: calc(100vh - 70px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .hero-search-title {
@@ -735,6 +771,20 @@ footer {
     .right-sidebar {
         position: static;
         order: 2;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .right-sidebar .sidebar-widget {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .right-sidebar .sidebar-widget h4 {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
     }
 
     .toc-sidebar {
@@ -808,10 +858,11 @@ footer {
         padding: 1.25rem 1rem;
         border-bottom: 1px solid var(--border-color);
         font-weight: 700;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--text-muted);
+        color: var(--text-main);
+        background: linear-gradient(135deg, rgba(0,105,255,0.03) 0%, rgba(139,92,246,0.03) 100%);
     }
 
     .mobile-toc-close {

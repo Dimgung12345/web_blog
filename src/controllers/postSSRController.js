@@ -50,14 +50,32 @@ export const getPostBySlug = async (req, res) => {
         const contentHtml = marked.parse(post.content || "");
         const toc = extractHeaders(post.content || "");
 
-        const relatedPosts = await Post.findAll({
+        let relatedPosts = await Post.findAll({
             where: {
                 CategoryId: post.CategoryId,
                 id: { [db.Sequelize.Op.ne]: post.id }
             },
+            include: [
+                { model: Category },
+                { model: User, attributes: ['username'] }
+            ],
             limit: 3,
             order: [['createdAt', 'DESC']]
         });
+
+        if (!relatedPosts || relatedPosts.length === 0) {
+            relatedPosts = await Post.findAll({
+                where: {
+                    id: { [db.Sequelize.Op.ne]: post.id }
+                },
+                include: [
+                    { model: Category },
+                    { model: User, attributes: ['username'] }
+                ],
+                limit: 3,
+                order: [['createdAt', 'DESC']]
+            });
+        }
 
         const categories = await Category.findAll();
         const readingTime = Math.ceil((post.content || "").split(/\s+/).length / 200);

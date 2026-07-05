@@ -27,6 +27,7 @@ export default (sequelize, DataTypes) => {
   // Relasi (kalau nanti ada Post)
   User.associate = (models) => {
     User.hasMany(models.Post, { foreignKey: "UserId" });
+    User.hasMany(models.UserLike, { foreignKey: "UserId" });
   };
 
   return User;

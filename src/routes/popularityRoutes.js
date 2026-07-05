@@ -1,3 +1,4 @@
+// @deprecated Use userlikeRoutes instead. Views feature replaced by per-user likes.
 import express from 'express';
 import * as popularityController from '../controllers/popularityController.js';
 const router = express.Router();

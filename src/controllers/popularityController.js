@@ -1,3 +1,4 @@
+// @deprecated Use userlikeController instead. Views feature replaced by per-user likes.
 import db from "../../models/index.js";
 
 const { Popularity, Post } = db;

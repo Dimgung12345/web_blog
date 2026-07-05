@@ -1,3 +1,4 @@
+// @deprecated Use UserLike model instead. Views feature replaced by per-user likes.
 export default (sequelize, DataTypes) => {
     const Popularity = sequelize.define("Popularity", {
         views: {
