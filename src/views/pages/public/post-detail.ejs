@@ -85,6 +85,36 @@ var sliceBg = 'linear-gradient(180deg, rgba('+rgb+',0.08) 0%, rgba('+rgb+',0.03)
         </article>
 
         <aside class="right-sidebar">
+            <div class="sidebar-widget" x-data="{
+                liked: false,
+                count: 0,
+                loading: false,
+                init() {
+                    fetch('<%= BASE_PATH %>/api/likes/<%= post.id %>/count').then(r=>r.json()).then(d=>{ this.count = d.count }).catch(()=>{});
+                    fetch('<%= BASE_PATH %>/api/likes/<%= post.id %>/check').then(r=>r.ok?r.json():{liked:false}).then(d=>{ this.liked = d.liked }).catch(()=>{});
+                },
+                toggle() {
+                    if (this.loading) return;
+                    this.loading = true;
+                    fetch('<%= BASE_PATH %>/api/likes/<%= post.id %>/toggle', { method:'POST' })
+                        .then(r=>r.ok?r.json():Promise.reject())
+                        .then(d=>{ this.liked = d.liked; this.count = d.count })
+                        .catch(()=>{ alert('Silakan login untuk memberi like'); })
+                        .finally(()=>{ this.loading = false });
+                }
+            }">
+                <h4 style="margin-bottom: 1rem;">Suka</h4>
+                <button @click="toggle()" :disabled="loading" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 2px solid var(--border-color); border-radius: 999px; background: white; cursor: pointer; font-size: 1rem; font-weight: 600; color: var(--text-main); transition: all 0.2s; width: 100%; justify-content: center;"
+                :style="liked ? 'border-color: #e11d48; background: #fff1f2; color: #e11d48;' : ''">
+                    <svg x-show="!liked" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                    </svg>
+                    <svg x-show="liked" width="20" height="20" viewBox="0 0 24 24" fill="#e11d48" stroke="#e11d48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                    </svg>
+                    <span x-text="count"></span>
+                    <span x-show="loading" style="font-size:0.75rem; color:var(--text-muted);">...</span>
+                </button>
+            </div>
+
             <div class="sidebar-widget">
                 <h4>Bagikan</h4>
                 <div class="social-share-buttons">
