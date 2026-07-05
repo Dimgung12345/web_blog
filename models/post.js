@@ -33,6 +33,7 @@ export default (sequelize, DataTypes) => {
   Post.associate = (models) => {
     Post.belongsTo(models.Category, { foreignKey: "CategoryId" });
     Post.hasMany(models.Media, { foreignKey: "PostId" });
+    Post.hasMany(models.UserLike, { foreignKey: "PostId" });
     Post.belongsTo(models.User, { foreignKey: "UserId" });
   };
 
