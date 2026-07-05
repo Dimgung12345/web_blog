@@ -30,7 +30,7 @@ app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(`${BASE_PATH}/storage`, express.static("storage"));
-app.use("/css", express.static(path.join(__dirname, "cdn/css")));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));

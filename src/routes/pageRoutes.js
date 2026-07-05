@@ -7,35 +7,14 @@ import { authMiddleware } from "../middleware/authMiddleware.js"
 const { Post, Category, User } = db;
 const router = express.Router();
 
-// Category color mapping
-const catColors = {
-    'Technology': { bg: '#0069ff', text: '#fff' },
-    'Science': { bg: '#8b5cf6', text: '#fff' },
-    'Design': { bg: '#ec4899', text: '#fff' },
-    'Programming': { bg: '#10b981', text: '#fff' },
-    'AI & Machine Learning': { bg: '#f43f5e', text: '#fff' },
-    'Web Development': { bg: '#06b6d4', text: '#fff' },
-    'Mobile Apps': { bg: '#84cc16', text: '#fff' },
-    'DevOps': { bg: '#6366f1', text: '#fff' },
-    'Cybersecurity': { bg: '#64748b', text: '#fff' },
-    'Cloud Computing': { bg: '#3b82f6', text: '#fff' },
-    'Data Science': { bg: '#f97316', text: '#fff' },
-    'Blockchain': { bg: '#ef4444', text: '#fff' },
-    'UX Research': { bg: '#a855f7', text: '#fff' },
-    'Startup': { bg: '#22c55e', text: '#fff' },
-    'Productivity': { bg: '#14b8a6', text: '#fff' },
-    'Open Source': { bg: '#65a30d', text: '#fff' },
-    'Database': { bg: '#78716c', text: '#fff' },
-    'API Design': { bg: '#0ea5e9', text: '#fff' },
-    'Testing': { bg: '#ea580c', text: '#fff' },
-    'Career': { bg: '#d946ef', text: '#fff' },
-    'Tech': { bg: '#0069ff', text: '#fff' },
-    'Sains': { bg: '#8b5cf6', text: '#fff' },
-    'General': { bg: '#475569', text: '#fff' }
-};
-
 const catColor = (name) => {
-    return (catColors[name] || catColors['General']).bg;
+    if (!name) return '#475569';
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const hue = Math.abs(hash) % 360;
+    return `hsl(${hue}, 65%, 45%)`;
 };
 
 router.use((req, res, next) => {

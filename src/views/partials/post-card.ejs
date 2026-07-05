@@ -1,0 +1,39 @@
+<%
+var _readMin = Math.ceil(((post.content || '').split(/\s+/).length) / 200) || 1;
+var _excerpt = (post.content || '').replace(/[#*`]/g, '').substring(0, 120);
+%>
+<article class="post-card-latest">
+    <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" class="post-card-thumb" aria-label="<%= post.title %>">
+        <% if (post.thumbnail) { %>
+            <img src="<%= post.thumbnail %>" alt="<%= post.title %>">
+        <% } else { %>
+            <div class="post-card-thumb-placeholder"></div>
+        <% } %>
+    </a>
+    <div class="post-card-body">
+        <% if (post.Category) { %>
+            <a href="<%= BASE_PATH %>/posts/category/<%= post.Category.slug %>"
+               class="post-card-cat"
+               style="--cat-color: <%= catColor(post.Category.name) %>;">
+                <%= post.Category.name %>
+            </a>
+        <% } %>
+        <h3 class="post-card-title">
+            <a href="<%= BASE_PATH %>/posts/<%= post.slug %>"><%= post.title %></a>
+        </h3>
+        <div class="post-card-meta">
+            <span><%= post.User ? post.User.username : 'Admin' %></span>
+            <span class="post-card-sep">•</span>
+            <span><%= new Date(post.createdAt).toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
+            <span class="post-card-sep">•</span>
+            <span><%= _readMin %> menit baca</span>
+        </div>
+        <p class="post-card-excerpt"><%= _excerpt %>…</p>
+        <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" class="post-card-readmore">
+            Baca selengkapnya
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+        </a>
+    </div>
+</article>

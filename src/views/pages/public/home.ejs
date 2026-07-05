@@ -1,256 +1,256 @@
 <%- include('../../partials/header', { title: 'eBlog-RPL - Insight Pengembang Perangkat Lunak' }) %>
 
-<section class="hero-slice" style="padding-bottom: 0;">
-    <% if (isLandingPage) { %>
-        <div class="hero-search">
-            <div class="container">
-                <h1 class="hero-search-title">Ingin mencari topik apa?</h1>
-                <p class="hero-search-sub">Temukan insight seputar pengembangan perangkat lunak, teknologi, dan sains.</p>
-                <form class="hero-search-form" action="<%= BASE_PATH %>/search" method="GET">
-                    <svg class="hero-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="m21 21-4.35-4.35" />
-                    </svg>
-                    <input type="search" name="query" placeholder="Ketik topik atau kata kunci..." autocomplete="off">
-                    <button type="submit">Cari</button>
-                </form>
-            </div>
-        </div>
-    <% } else { %>
-        <div class="compact-search-header" style="padding: 3rem 0; text-align: center;">
-            <div class="container" style="max-width: 1400px; padding: 0 3rem;">
-                <h1 style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 850; color: var(--text-main); margin-bottom: 0.5rem; letter-spacing: -0.02em;">
-                    <%= typeof title !== 'undefined' ? title : 'Semua Artikel' %>
-                </h1>
-                <% if (typeof q !== 'undefined' && q) { %>
-                    <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem;">Menampilkan hasil pencarian untuk kata kunci "<strong style="color: var(--text-main);"><%= q %></strong>"</p>
-                <% } else { %>
-                    <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem;">Jelajahi berbagai artikel dan tutorial seputar rekayasa perangkat lunak.</p>
-                <% } %>
-                <form class="hero-search-form" action="<%= BASE_PATH %>/search" method="GET" style="max-width: 500px;">
-                    <svg class="hero-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="m21 21-4.35-4.35" />
-                    </svg>
-                    <input type="search" name="query" value="<%= typeof q !== 'undefined' ? q : '' %>" placeholder="Cari topik atau kata kunci lain..." autocomplete="off">
-                    <button type="submit">Cari</button>
-                </form>
-            </div>
-        </div>
-    <% } %>
 
-    <% if (isLandingPage) { %>
-        <div class="container" style="padding: 0 3rem; max-width: 1400px;">
-            <hr style="border: 0; border-top: 1.5px dashed #e2e8f0; margin: 0; width: 100%;">
-        </div>
-
-        <div class="container" style="padding: 4rem 3rem 2rem; text-align: center; max-width: 1200px;">
-            <h1 style="font-family: var(--font-heading); font-size: 3rem; font-weight: 900; margin-bottom: 1rem; color: var(--text-main); letter-spacing: -0.02em;">eBlog-RPL</h1>
-            <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">Media pembelajaran dan update terkini seputar rekayasa perangkat lunak, teknologi, dan pengembangan sistem.</p>
-        </div>
-
-        <div class="container" style="padding: 2rem 3rem 4rem; max-width: 1400px;">
-            <div class="hero-grid-layout" style="display: grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: auto auto; gap: 2rem;">
-                
-                <% if (posts && posts.length > 0) { %>
-                    <% var featuredPost = posts[0]; %>
-                    <article class="featured-post-card hero-item-featured" style="background: white; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,0.03); grid-row: 1 / 3;">
-                        <div style="position: relative; width: 100%; aspect-ratio: 16/10; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                            <img src="https://placehold.co/1200x750" alt="Featured post" style="width: 100%; height: 100%; object-fit: cover;">
-                            <% if (featuredPost.Category) { %>
-                                <span style="position: absolute; top: 20px; left: 20px; background: #0069ff; color: #fff; padding: 6px 16px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;"><%= featuredPost.Category.name %></span>
-                            <% } %>
-                        </div>
-                        <div style="padding: 2rem; flex: 1; display: flex; flex-direction: column;">
-                            <h2 style="font-family: var(--font-heading); font-size: 1.75rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.3; color: var(--text-main);">
-                                <a href="<%= BASE_PATH %>/posts/<%= featuredPost.slug %>" style="color: inherit; text-decoration: none;">
-                                    <%= featuredPost.title %>
-                                </a>
-                            </h2>
-                            <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
-                                <span>Oleh <%= featuredPost.User ? featuredPost.User.username : 'Admin' %></span>
-                                <span><%= new Date(featuredPost.createdAt).toLocaleDateString('id-ID', { month: 'long', day: 'numeric', year: 'numeric' }) %></span>
+    <section class="hero-slice<%= isLandingPage ? '' : ' hero-slice--compact' %>">
+        <% if (isLandingPage) { %>
+            <div class="hero-split-container">
+                <div class="container hero-split-inner">
+                    <div class="hero-left-content">
+                        <span class="hero-badge">Divisi RPL SMK Pelita Nusantara</span>
+                        <h1 class="hero-split-title">Insight & Update Rekayasa Perangkat Lunak</h1>
+                        <p class="hero-split-sub">Temukan artikel berkualitas tinggi, tutorial coding, sains, dan
+                            perkembangan teknologi terbaru langsung dari pengembang.</p>
+                        <form class="hero-search-form" action="<%= BASE_PATH %>/search" method="GET">
+                            <svg class="hero-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="m21 21-4.35-4.35" />
+                            </svg>
+                            <input type="search" name="query"
+                                placeholder="Cari topik, tutorial, atau bahasa pemrograman..." autocomplete="off">
+                            <button type="submit">Cari</button>
+                        </form>
+                    </div>
+                    <div class="hero-right-visual">
+                        <div class="tech-card-glow"></div>
+                        <div class="tech-canvas">
+                            <div class="floating-code-line">const rpl = new SoftwareEngineer();</div>
+                            <div class="tech-circle tech-circle-large"></div>
+                            <div class="tech-circle tech-circle-mid"></div>
+                            <div class="tech-circle tech-circle-small"></div>
+                            <div class="tech-dots"></div>
+                            <div class="tech-terminal">
+                                <div class="terminal-header">
+                                    <span class="dot red"></span>
+                                    <span class="dot yellow"></span>
+                                    <span class="dot green"></span>
+                                    <span class="terminal-title">bash - rpl@devtrine</span>
+                                </div>
+                                <div class="terminal-body">
+                                    <p class="cmd"><span class="prompt">$</span> npm run dev</p>
+                                    <p class="out">Server running on port 5000</p>
+                                    <p class="out success">✓ Build completed successfully!</p>
+                                    <p class="cmd"><span class="prompt">$</span> <span class="cursor">_</span></p>
+                                </div>
                             </div>
-                            <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.6; margin-bottom: 2rem; flex: 1;">
-                                <%= featuredPost.content.replace(/[#*`]/g, '').substring(0, 180) %>...
-                            </p>
-                            <a href="<%= BASE_PATH %>/posts/<%= featuredPost.slug %>" style="color: #0069ff; font-weight: 600; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                                Baca selengkapnya
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                                </svg>
-                            </a>
                         </div>
-                    </article>
+                    </div>
+                </div>
+            </div>
+            <% } else { %>
+                <div class="compact-header">
+                    <div class="container">
+                        <h1 class="compact-header-title">
+                            <%= typeof title !=='undefined' ? title : 'Semua Artikel' %>
+                        </h1>
+                        <% if (typeof q !=='undefined' && q) { %>
+                            <p class="compact-header-sub">Hasil pencarian untuk kata kunci "<strong>
+                                    <%= q %>
+                                </strong>"</p>
+                            <% } else { %>
+                                <p class="compact-header-sub">Jelajahi berbagai artikel dan tutorial seputar rekayasa
+                                    perangkat lunak.</p>
+                                <% } %>
+                                    <form class="hero-search-form compact-search-form" action="<%= BASE_PATH %>/search"
+                                        method="GET">
+                                        <svg class="hero-search-icon" width="18" height="18" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                            <circle cx="11" cy="11" r="8" />
+                                            <path d="m21 21-4.35-4.35" />
+                                        </svg>
+                                        <input type="search" name="query"
+                                            value="<%= typeof q !== 'undefined' ? q : '' %>"
+                                            placeholder="Cari topik atau kata kunci lain..." autocomplete="off">
+                                        <button type="submit">Cari</button>
+                                    </form>
+                    </div>
+                </div>
                 <% } %>
 
-                <div class="hero-item-categories category-topics-widget" style="background: #f8fafc; border-radius: 24px; padding: 2rem 1.5rem; box-shadow: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
-                        <h3 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin: 0;">Topik Kategori</h3>
-                        <a href="<%= BASE_PATH %>/categories" style="color: #0069ff; font-size: 0.8rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                            Selengkapnya
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                    <% if (isLandingPage) { %>
+                        <div class="container landing-divider">
+                            <hr class="dashed-rule">
+                        </div>
+
+                        <div class="container landing-hero-grid-wrap">
+                            <div class="hero-grid-layout">
+
+                                <% if (posts && posts.length> 0) { %>
+                                    <% var featuredPost=posts[0]; %>
+                                        <article class="featured-post-card hero-item-featured">
+                                            <div class="featured-post-thumb">
+                                                <% if (featuredPost.thumbnail) { %>
+                                                    <img src="<%= featuredPost.thumbnail %>"
+                                                        alt="<%= featuredPost.title %>">
+                                                    <% } else { %>
+                                                        <div class="featured-post-thumb-placeholder"></div>
+                                                        <% } %>
+                                                            <% if (featuredPost.Category) { %>
+                                                                <span class="featured-post-cat"
+                                                                    style="--cat-color: <%= catColor(featuredPost.Category.name) %>;">
+                                                                    <%= featuredPost.Category.name %>
+                                                                </span>
+                                                                <% } %>
+                                            </div>
+                                            <div class="featured-post-body">
+                                                <h2 class="featured-post-title">
+                                                    <a href="<%= BASE_PATH %>/posts/<%= featuredPost.slug %>">
+                                                        <%= featuredPost.title %>
+                                                    </a>
+                                                </h2>
+                                                <div class="featured-post-meta">
+                                                    <span>Oleh <%= featuredPost.User ? featuredPost.User.username
+                                                            : 'Admin' %></span>
+                                                    <span>
+                                                        <%= new Date(featuredPost.createdAt).toLocaleDateString('id-ID',
+                                                            { month: 'long' , day: 'numeric' , year: 'numeric' }) %>
+                                                    </span>
+                                                </div>
+                                                <p class="featured-post-excerpt">
+                                                    <%= featuredPost.content.replace(/[#*`]/g, '' ).substring(0, 180) %>
+                                                        …
+                                                </p>
+                                                <a href="<%= BASE_PATH %>/posts/<%= featuredPost.slug %>"
+                                                    class="featured-post-link">
+                                                    Baca selengkapnya
+                                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                                        <path d="M5 12h14M12 5l7 7-7 7" />
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </article>
+                                        <% } %>
+
+                                            <div class="hero-item-categories category-topics-widget">
+                                                <div class="widget-header">
+                                                    <h3 class="widget-title">Topik Kategori</h3>
+                                                    <a href="<%= BASE_PATH %>/categories" class="widget-more-link">
+                                                        Selengkapnya
+                                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                                            <path d="M5 12h14M12 5l7 7-7 7" />
+                                                        </svg>
+                                                    </a>
+                                                </div>
+                                                <div class="cat-badge-list">
+                                                    <% if (categories && categories.length> 0) { %>
+                                                        <% categories.slice(0, 12).forEach(cat=> { %>
+                                                            <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>"
+                                                                class="cat-badge"
+                                                                style="--cat-color: <%= catColor(cat.name) %>;">
+                                                                <%= cat.name %>
+                                                            </a>
+                                                            <% }) %>
+                                                                <% } %>
+                                                </div>
+                                            </div>
+
+                                            <% if (posts && posts.length> 1) { %>
+                                                <div class="hero-item-trending trending-posts-widget">
+                                                    <h3 class="widget-title">Postingan Trending</h3>
+                                                    <div class="trending-list">
+                                                        <% posts.slice(1, 5).forEach((post, idx)=> { %>
+                                                            <a href="<%= BASE_PATH %>/posts/<%= post.slug %>"
+                                                                class="trending-item<%= idx > 0 ? ' trending-item--bordered' : '' %>">
+                                                                <span class="trending-rank">0<%= idx + 1 %></span>
+                                                                <div class="trending-info">
+                                                                    <h4 class="trending-title">
+                                                                        <%= post.title %>
+                                                                    </h4>
+                                                                    <div class="trending-meta">
+                                                                        <% if (post.Category) { %>
+                                                                            <span class="trending-cat"
+                                                                                style="--cat-color: <%= catColor(post.Category.name) %>;">
+                                                                                <%= post.Category.name %>
+                                                                            </span>
+                                                                            <% } %>
+                                                                                <span>
+                                                                                    <%= new
+                                                                                        Date(post.createdAt).toLocaleDateString('id-ID',
+                                                                                        { month: 'short' ,
+                                                                                        day: 'numeric' }) %>
+                                                                                </span>
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+                                                            <% }) %>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+
+                            </div>
+                        </div>
+                        <% } %>
+    </section>
+
+    <section class="latest-posts-slice<%= isLandingPage ? '' : ' latest-posts-slice--light' %>">
+        <div class="container">
+            <% if (!isLandingPage) { %>
+                <hr class="dashed-rule">
+                <% } %>
+                    <h2 class="section-title">
+                        <%= isLandingPage ? 'Postingan Terbaru' : (typeof title !=='undefined' ? title
+                            : 'Daftar Artikel' ) %>
+                    </h2>
+
+                    <div class="posts-grid">
+                        <% var displayPosts=isLandingPage ? posts.slice(1, 4) : posts; if (displayPosts &&
+                            displayPosts.length> 0) {
+                            %>
+                            <% displayPosts.forEach(post=> { %>
+                                <%- include('../../partials/post-card', { post, BASE_PATH, catColor }) %>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <p class="posts-empty">Belum ada artikel. Cek lagi nanti!</p>
+                                            <% } %>
+                    </div>
+        </div>
+    </section>
+
+    <% if (isLandingPage) { var categoriesWithPosts=[]; if (categories && categories.length> 0) {
+        categories.forEach(cat => {
+        var catPosts = posts.filter(p => p.Category && p.Category.id === cat.id);
+        if (catPosts.length > 0) {
+        categoriesWithPosts.push({ category: cat, posts: catPosts });
+        }
+        });
+        }
+        %>
+        <% categoriesWithPosts.slice(0, 2).forEach(group=> { %>
+            <section class="category-highlight-slice">
+                <div class="container">
+                    <hr class="dashed-rule">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <%= group.category.name %>
+                        </h2>
+                        <a href="<%= BASE_PATH %>/posts/category/<%= group.category.slug %>" class="section-more-link">
+                            Lihat Semua
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" aria-hidden="true">
+                                <path d="M5 12h14M12 5l7 7-7 7" />
                             </svg>
                         </a>
                     </div>
-                    <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-start;">
-                        <% if (categories && categories.length > 0) { %>
-                            <% categories.slice(0, 12).forEach((cat) => { %>
-                                <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" class="cat-badge" style="background-color: <%= catColor(cat.name) %>; color: #fff; padding: 8px 18px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; text-align: center; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px rgba(0,0,0,0.08);" onmouseover="this.style.transform='translateY(-2px) scale(1.02)'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.08)'"><%= cat.name %></a>
-                            <% }) %>
-                        <% } %>
+                    <div class="posts-grid">
+                        <% group.posts.slice(0, 3).forEach(post=> { %>
+                            <%- include('../../partials/post-card', { post, BASE_PATH, catColor }) %>
+                                <% }) %>
                     </div>
                 </div>
-
-                <% if (posts && posts.length > 1) { %>
-                    <div class="hero-item-trending trending-posts-widget" style="background: #f8fafc; border-radius: 24px; padding: 2rem 1.5rem; box-shadow: none;">
-                        <h3 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--text-main);">Postingan Trending</h3>
-                        <div style="display: flex; flex-direction: column;">
-                            <% posts.slice(1, 5).forEach((post, idx) => { %>
-                                <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" style="text-decoration: none; color: inherit; padding: <%= idx > 0 ? '1.25rem 0' : '0' %>; border-top: <%= idx > 0 ? '1px solid var(--border-color)' : 'none' %>;">
-                                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                                        <span style="font-size: 1.5rem; font-weight: 800; color: #061756; opacity: 0.6; min-width: 30px;">0<%= idx + 1 %></span>
-                                        <div style="flex: 1;">
-                                            <h4 style="font-family: var(--font-heading); font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; line-height: 1.4; color: var(--text-main);"><%= post.title %></h4>
-                                            <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: var(--text-muted);">
-                                                <% if (post.Category) { %>
-                                                    <span style="color: <%= catColor(post.Category.name) %>; font-weight: 600;"><%= post.Category.name %></span>
-                                                <% } %>
-                                                <span><%= new Date(post.createdAt).toLocaleDateString('id-ID', { month: 'short', day: 'numeric' }) %></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            <% }) %>
-                        </div>
-                    </div>
+            </section>
+            <% }) %>
                 <% } %>
-            </div>
-        </div>
-    <% } %>
-</section>
 
-<section class="latest-posts-slice" style="background-color: <%= isLandingPage ? '#f8fafc' : '#ffffff' %>; padding: 4rem 0 6rem; width: 100%;">
-    <div class="container" style="max-width: 1400px; padding: 0 3rem;">
-        <% if (!isLandingPage) { %>
-            <hr style="border: 0; border-top: 1.5px dashed #e2e8f0; margin: 0 auto 3.5rem; width: 100%;">
-        <% } %>
-        <h2 style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 850; margin-bottom: 2.5rem; color: var(--text-main); letter-spacing: -0.02em;">
-            <%= isLandingPage ? 'Postingan Terbaru' : (typeof title !== 'undefined' ? title : 'Daftar Artikel') %>
-        </h2>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem;">
-            <% 
-                var displayPosts = isLandingPage ? posts.slice(1, 4) : posts;
-                if (displayPosts && displayPosts.length > 0) { 
-            %>
-                <% displayPosts.forEach(post => { %>
-                    <article class="post-card-latest" style="background: white; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.02)'">
-                        <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" style="display: block; width: 100%; aspect-ratio: 16/10; overflow: hidden; border-bottom: 1px solid #edf2f7; background: linear-gradient(135deg, #f0f4ff 0%, #dbeafe 100%);">
-                            <img src="https://placehold.co/800x500" alt="<%= post.title %>" style="width: 100%; height: 100%; object-fit: cover;">
-                        </a>
-                        <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column;">
-                            <% if (post.Category) { %>
-                                <span style="background-color: <%= catColor(post.Category.name) %>15; color: <%= catColor(post.Category.name) %>; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; width: max-content; margin-bottom: 1rem; display: inline-block;"><%= post.Category.name %></span>
-                            <% } %>
-                            <h3 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 800; line-height: 1.35; margin: 0 0 0.75rem;">
-                                <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" style="color: var(--text-main); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#0069ff'" onmouseout="this.style.color='var(--text-main)'"><%= post.title %></a>
-                            </h3>
-                            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
-                                <span><%= post.User ? post.User.username : 'Admin' %></span>
-                                <span style="opacity: 0.5;">•</span>
-                                <span><%= new Date(post.createdAt).toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
-                                <span style="opacity: 0.5;">•</span>
-                                <span><%= Math.ceil((post.content || "").split(/\s+/).length / 200) %> menit baca</span>
-                            </div>
-                            <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin: 0 0 1.25rem; flex: 1;">
-                                <%= post.content.replace(/[#*`]/g, '').substring(0, 120) %>...
-                            </p>
-                            <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" class="read-more-link" style="color: var(--text-main); font-weight: 700; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: color 0.2s; width: max-content;" onmouseover="this.style.color='#0069ff'; this.querySelector('svg').style.transform='translateX(4px)';" onmouseout="this.style.color='var(--text-main)'; this.querySelector('svg').style.transform='translateX(0)';">
-                                Baca selengkapnya
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transition: transform 0.2s;">
-                                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </article>
-                <% }) %>
-            <% } else { %>
-                <p style="color: var(--text-muted); grid-column: 1 / -1; padding: 3rem 0; text-align: center;">Belum ada artikel. Cek lagi nanti!</p>
-            <% } %>
-        </div>
-    </div>
-</section>
-
-<% 
-    if (isLandingPage) { 
-        // Group posts by Category dynamically
-        var categoriesWithPosts = [];
-        if (categories && categories.length > 0) {
-            categories.forEach(cat => {
-                var catPosts = posts.filter(p => p.Category && p.Category.id === cat.id);
-                if (catPosts.length > 0) {
-                    categoriesWithPosts.push({
-                        category: cat,
-                        posts: catPosts
-                    });
-                }
-            });
-        }
-%>
-    <% categoriesWithPosts.slice(0, 2).forEach(group => { %>
-        <section class="category-highlight-slice" style="background-color: #ffffff; padding: 4rem 0 5rem; width: 100%;">
-            <div class="container" style="max-width: 1400px; padding: 0 3rem;">
-                <hr style="border: 0; border-top: 1.5px dashed #e2e8f0; margin: 0 auto 3rem; width: 100%;">
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
-                    <h2 style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 850; color: var(--text-main); margin: 0; letter-spacing: -0.02em;"><%= group.category.name %></h2>
-                    <a href="<%= BASE_PATH %>/posts/category/<%= group.category.slug %>" style="color: #0069ff; font-weight: 700; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                        Lihat Semua
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem;">
-                    <% group.posts.slice(0, 3).forEach(post => { %>
-                        <article class="post-card-latest" style="background: white; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; height: 100%; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.02);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.02)'">
-                            <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" style="display: block; width: 100%; aspect-ratio: 16/10; overflow: hidden; border-bottom: 1px solid #edf2f7; background: linear-gradient(135deg, #f0f4ff 0%, #dbeafe 100%);">
-                                <img src="https://placehold.co/800x500" alt="<%= post.title %>" style="width: 100%; height: 100%; object-fit: cover;">
-                            </a>
-                            <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column;">
-                                <% if (post.Category) { %>
-                                    <span style="background-color: <%= catColor(post.Category.name) %>15; color: <%= catColor(post.Category.name) %>; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; width: max-content; margin-bottom: 1rem; display: inline-block;"><%= post.Category.name %></span>
-                                <% } %>
-                                <h3 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 800; line-height: 1.35; margin: 0 0 0.75rem;">
-                                    <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" style="color: var(--text-main); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#0069ff'" onmouseout="this.style.color='var(--text-main)'"><%= post.title %></a>
-                                </h3>
-                                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
-                                    <span><%= post.User ? post.User.username : 'Admin' %></span>
-                                    <span style="opacity: 0.5;">•</span>
-                                    <span><%= new Date(post.createdAt).toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
-                                    <span style="opacity: 0.5;">•</span>
-                                    <span><%= Math.ceil((post.content || "").split(/\s+/).length / 200) %> menit baca</span>
-                                </div>
-                                <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; margin: 0 0 1.25rem; flex: 1;">
-                                    <%= post.content.replace(/[#*`]/g, '').substring(0, 120) %>...
-                                </p>
-                                <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" class="read-more-link" style="color: var(--text-main); font-weight: 700; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: color 0.2s; width: max-content;" onmouseover="this.style.color='#0069ff'; this.querySelector('svg').style.transform='translateX(4px)';" onmouseout="this.style.color='var(--text-main)'; this.querySelector('svg').style.transform='translateX(0)';">
-                                    Baca selengkapnya
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transition: transform 0.2s;">
-                                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </article>
-                    <% }) %>
-                </div>
-            </div>
-        </section>
-    <% }) %>
-<% } %>
-
-<%- include('../../partials/footer') %>
+                    <%- include('../../partials/footer') %>
