@@ -69,6 +69,7 @@ router.get("/categories", async (req, res) => {
     }
 });
 
+router.get("/register", (req, res) => res.render("pages/auth/register"));
 router.get("/login", (req, res) => res.render("pages/auth/login"));
 router.post("/login", login);
 router.get("/admin", auth('admin'), (req, res) => res.render("pages/admin/dashboard"));
