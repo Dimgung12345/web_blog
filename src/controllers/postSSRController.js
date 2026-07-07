@@ -106,7 +106,7 @@ export const getAllPosts = async (req, res) => {
             posts,
             categories,
             isLandingPage: false,
-            title: "Semua Artikel - eBlog-RPL"
+            title: "Semua Artikel - Blog"
         });
     } catch (err) {
         res.status(500).render("pages/public/404");
