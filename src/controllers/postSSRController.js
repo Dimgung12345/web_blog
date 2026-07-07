@@ -98,7 +98,8 @@ export const getAllPosts = async (req, res) => {
     try {
         const posts = await Post.findAll({
             include: [{ model: Category }, { model: User, attributes: ['username'] }],
-            order: [['createdAt', 'DESC']]
+            order: [['createdAt', 'DESC']],
+            limit: 15
         });
         const categories = await Category.findAll();
 
@@ -106,7 +107,7 @@ export const getAllPosts = async (req, res) => {
             posts,
             categories,
             isLandingPage: false,
-            title: "Semua Artikel - eBlog-RPL"
+            title: "Semua Artikel - eBlog-RPL",
         });
     } catch (err) {
         res.status(500).render("pages/public/404");
