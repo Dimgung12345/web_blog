@@ -5,7 +5,7 @@
             <li style="margin-bottom: 12px;">
                 <a href="<%= BASE_PATH %>/categories" style="text-decoration: none; color: #3498db; font-weight: 500;">Semua Kategori</a>
             </li>
-            <% if (typeof categories !== 'undefined') { %>
+            <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
                 <% categories.forEach(cat => { %>
                     <li style="margin-bottom: 12px;">
                         <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" style="text-decoration: none; color: #555; transition: 0.3s;">
@@ -13,6 +13,8 @@
                         </a>
                     </li>
                 <% }) %>
+            <% } else { %>
+                <li style="margin-bottom: 12px; color: #999;">Belum ada kategori</li>
             <% } %>
         </ul>
     </div>
