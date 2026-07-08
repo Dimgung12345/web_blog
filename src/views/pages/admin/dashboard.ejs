@@ -59,6 +59,14 @@
                             <tr><td colspan="4" style="padding: 40px; text-align: center; color: var(--text-muted);">Memuat...</td></tr>
                         </tbody>
                     </table>
+                    <div id="pagination" style="display: none; padding: 16px 24px; border-top: 1px solid var(--border-color); justify-content: space-between; align-items: center;">
+                        <span id="page-info" style="color: var(--text-muted); font-size: 0.85rem;"></span>
+                        <div style="display: flex; gap: 8px;">
+                            <button id="prev-page" onclick="goToPage(currentPage - 1)" style="padding: 8px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: white; cursor: pointer; font-weight: 600; font-size: 0.85rem; color: var(--text-main);">Prev</button>
+                            <span id="page-numbers" style="display: flex; gap: 4px; align-items: center;"></span>
+                            <button id="next-page" onclick="goToPage(currentPage + 1)" style="padding: 8px 16px; border: 1px solid var(--border-color); border-radius: 8px; background: white; cursor: pointer; font-weight: 600; font-size: 0.85rem; color: var(--text-main);">Next</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -225,7 +233,11 @@
             updatePreview();
         }
 
-        async function loadData() {
+        let currentPage = 1;
+        let totalPages = 1;
+        let totalPosts = 0;
+
+        async function loadData(page = 1) {
             try {
                 const catRes = await fetch('<%= BASE_PATH %>/api/categories', { headers: { 'Accept': 'application/json' } });
                 const categories = await catRes.json();
@@ -247,10 +259,20 @@
                     `;
                 });
 
-                const postRes = await fetch('<%= BASE_PATH %>/api/posts', { headers: { 'Accept': 'application/json' } });
-                const posts = await postRes.json();
+                const postRes = await fetch(`<%= BASE_PATH %>/api/posts?page=${page}&limit=10`, { headers: { 'Accept': 'application/json' } });
+                const result = await postRes.json();
+                const posts = result.data;
+                const meta = result.meta;
+                currentPage = meta.page;
+                totalPages = meta.totalPages;
+                totalPosts = meta.total;
+
                 const postTbody = document.getElementById('admin-posts-list');
                 postTbody.innerHTML = '';
+
+                if (posts.length === 0) {
+                    postTbody.innerHTML = '<tr><td colspan="4" style="padding: 40px; text-align: center; color: var(--text-muted);">Tidak ada postingan.</td></tr>';
+                }
 
                 posts.forEach(p => {
                     const date = new Date(p.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -266,7 +288,41 @@
                         </tr>
                     `;
                 });
+
+                renderPagination();
             } catch (e) { console.error(e); }
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            if (totalPages <= 1) { pagination.style.display = 'none'; return; }
+            pagination.style.display = 'flex';
+
+            document.getElementById('page-info').textContent = `Halaman ${currentPage} dari ${totalPages} (${totalPosts} total)`;
+            document.getElementById('prev-page').disabled = currentPage <= 1;
+            document.getElementById('prev-page').style.opacity = currentPage <= 1 ? '0.5' : '1';
+            document.getElementById('next-page').disabled = currentPage >= totalPages;
+            document.getElementById('next-page').style.opacity = currentPage >= totalPages ? '0.5' : '1';
+
+            const container = document.getElementById('page-numbers');
+            container.innerHTML = '';
+            const maxVisible = 5;
+            let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+            let end = Math.min(totalPages, start + maxVisible - 1);
+            if (end - start + 1 < maxVisible) start = Math.max(1, end - maxVisible + 1);
+
+            for (let i = start; i <= end; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.onclick = () => goToPage(i);
+                btn.style.cssText = `padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; background: ${i === currentPage ? 'var(--primary-color)' : 'white'}; color: ${i === currentPage ? 'white' : 'var(--text-main)'}; cursor: pointer; font-weight: 600; font-size: 0.85rem;`;
+                container.appendChild(btn);
+            }
+        }
+
+        function goToPage(page) {
+            if (page < 1 || page > totalPages) return;
+            loadData(page);
         }
 
         let editingPostId = null;
