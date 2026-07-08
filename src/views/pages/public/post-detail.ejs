@@ -1,4 +1,4 @@
-<%- include('../../partials/header') %>
+<%- include('../../partials/header', { title: post.title + ' - Blog' }) %>
 
 <%
 var catName = post.Category ? post.Category.name : 'General';
@@ -21,8 +21,8 @@ var sliceBg = 'linear-gradient(180deg, color-mix(in srgb, ' + color + ' 8%, tran
                     <span class="author-name">Oleh <%= post.User ? post.User.username : 'Admin' %></span>
                 </div>
                 <ul class="post-stats">
-                    <li>Terbit: <%= new Date(post.createdAt).toLocaleDateString('id-ID', { month: 'long', day: 'numeric', year: 'numeric' }) %></li>
-                    <li><%= readingTime %> menit baca</li>
+                    <li>Terbit: <%= post.createdAt ? new Date(post.createdAt).toLocaleDateString('id-ID', { month: 'long', day: 'numeric', year: 'numeric' }) : '-' %></li>
+                    <li><%= readingTime || 1 %> menit baca</li>
                 </ul>
             </div>
         </div>
@@ -53,26 +53,26 @@ var sliceBg = 'linear-gradient(180deg, color-mix(in srgb, ' + color + ' 8%, tran
                         Daftar Isi
                     </span>
                 </li>
-                <% toc.forEach((item, index) => { %>
+                <% if (toc && toc.length > 0) { toc.forEach((item, index) => { %>
                     <li class="toc-item <%= index === 0 ? 'active' : '' %>">
                         <a href="#<%= item.id %>" style="padding-left: <%= 16 + (item.level - 1) * 16 %>px;">
                             <%= item.text %>
                         </a>
                     </li>
-                <% }) %>
+                <% }); } %>
             </ul>
         </div>
 
         <aside class="toc-sidebar" id="toc-sidebar">
             <h3>Daftar Isi</h3>
             <ul class="toc-list" id="toc">
-                <% toc.forEach((item, index) => { %>
+                <% if (toc && toc.length > 0) { toc.forEach((item, index) => { %>
                     <li class="toc-item <%= index === 0 ? 'active' : '' %>">
                         <a href="#<%= item.id %>" style="padding-left: <%= 24 + (item.level - 1) * 20 %>px;">
                             <%= item.text %>
                         </a>
                     </li>
-                <% }) %>
+                <% }); } %>
             </ul>
         </aside>
 

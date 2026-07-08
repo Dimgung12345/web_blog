@@ -89,8 +89,8 @@
                                                     <span>Oleh <%= featuredPost.User ? featuredPost.User.username
                                                             : 'Admin' %></span>
                                                     <span>
-                                                        <%= new Date(featuredPost.createdAt).toLocaleDateString('id-ID',
-                                                            { month: 'long' , day: 'numeric' , year: 'numeric' }) %>
+                                                        <%= featuredPost.createdAt ? new Date(featuredPost.createdAt).toLocaleDateString('id-ID',
+                                                            { month: 'long' , day: 'numeric' , year: 'numeric' }) : '-' %>
                                                     </span>
                                                     <span x-data="{ count: 0 }" x-init="fetch('<%= BASE_PATH %>/api/likes/<%= featuredPost.id %>/count').then(r=>r.json()).then(d=>count=d.count).catch(()=>{})" style="display: inline-flex; align-items: center; gap: 4px;">
                                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
@@ -98,7 +98,7 @@
                                                     </span>
                                                 </div>
                                                 <p class="featured-post-excerpt">
-                                                    <%= featuredPost.content.replace(/[#*`]/g, '' ).substring(0, 180) %>
+                                                    <%= (featuredPost.content || '').replace(/[#*`]/g, '').substring(0, 180) %>
                                                         …
                                                 </p>
                                                 <a href="<%= BASE_PATH %>/posts/<%= featuredPost.slug %>"
@@ -109,6 +109,18 @@
                                                         <path d="M5 12h14M12 5l7 7-7 7" />
                                                     </svg>
                                                 </a>
+                                            </div>
+                                        </article>
+                                        <% } else { %>
+                                        <article class="featured-post-card hero-item-featured">
+                                            <div class="featured-post-thumb">
+                                                <div class="skeleton skeleton--thumb"></div>
+                                            </div>
+                                            <div class="featured-post-body">
+                                                <div class="skeleton skeleton--title skeleton--title-lg"></div>
+                                                <div class="skeleton skeleton--text skeleton--text-sm" style="margin-bottom:0.75rem"></div>
+                                                <div class="skeleton skeleton--text skeleton--text-md"></div>
+                                                <div class="skeleton skeleton--text skeleton--text-sm"></div>
                                             </div>
                                         </article>
                                         <% } %>
@@ -133,12 +145,16 @@
                                                                 <%= cat.name %>
                                                             </a>
                                                             <% }) %>
+                                                                <% } else { %>
+                                                                    <% for (var i = 0; i < 8; i++) { %>
+                                                                        <span class="skeleton skeleton--badge"></span>
+                                                                    <% } %>
                                                                 <% } %>
                                                 </div>
                                             </div>
 
-                                            <% 
-                                                var displayTrending = (typeof trendingPosts !== 'undefined' && trendingPosts.length > 0) ? trendingPosts : posts.slice(1, 5);
+                                                <% 
+                                                var displayTrending = (typeof trendingPosts !== 'undefined' && trendingPosts.length > 0) ? trendingPosts : (posts || []).slice(1, 5);
                                                 if (displayTrending && displayTrending.length > 0) { 
                                             %>
                                                 <div class="hero-item-trending trending-posts-widget">
@@ -160,15 +176,30 @@
                                                                             </span>
                                                                             <% } %>
                                                                                 <span>
-                                                                                    <%= new
+                                                                                    <%= post.createdAt ? new
                                                                                         Date(post.createdAt).toLocaleDateString('id-ID',
                                                                                         { month: 'short' ,
-                                                                                        day: 'numeric' }) %>
+                                                                                        day: 'numeric' }) : '-' %>
                                                                                 </span>
                                                                     </div>
                                                                 </div>
                                                             </a>
                                                             <% }) %>
+                                                    </div>
+                                                </div>
+                                                <% } else { %>
+                                                <div class="hero-item-trending trending-posts-widget">
+                                                    <h3 class="widget-title">Postingan Trending</h3>
+                                                    <div class="trending-list">
+                                                        <% for (var i = 0; i < 5; i++) { %>
+                                                            <div class="trending-item<%= i > 0 ? ' trending-item--bordered' : '' %>">
+                                                                <span class="skeleton skeleton--rank"></span>
+                                                                <div class="trending-info">
+                                                                    <div class="skeleton skeleton--title skeleton--title-sm"></div>
+                                                                    <div class="skeleton skeleton--text skeleton--text-xs" style="margin-top:4px"></div>
+                                                                </div>
+                                                            </div>
+                                                        <% } %>
                                                     </div>
                                                 </div>
                                                 <% } %>
@@ -189,14 +220,26 @@
                     </h2>
 
                     <div class="posts-grid">
-                        <% var displayPosts=isLandingPage ? posts.slice(1, 4) : posts; if (displayPosts &&
+                        <% var displayPosts=isLandingPage ? (posts || []).slice(1, 4) : posts; if (displayPosts &&
                             displayPosts.length> 0) {
                             %>
                             <% displayPosts.forEach(post=> { %>
                                 <%- include('../../partials/post-card', { post, BASE_PATH, catColor }) %>
                                     <% }) %>
                                         <% } else { %>
-                                            <p class="posts-empty">Belum ada artikel. Cek lagi nanti!</p>
+                                            <% for (var i = 0; i < 3; i++) { %>
+                                            <div class="post-card-latest">
+                                                <div class="post-card-thumb">
+                                                    <div class="skeleton skeleton--thumb"></div>
+                                                </div>
+                                                <div class="post-card-body">
+                                                    <div class="skeleton skeleton--badge" style="margin-bottom:1rem"></div>
+                                                    <div class="skeleton skeleton--title skeleton--title-md"></div>
+                                                    <div class="skeleton skeleton--text skeleton--text-sm"></div>
+                                                    <div class="skeleton skeleton--text skeleton--text-xs"></div>
+                                                </div>
+                                            </div>
+                                            <% } %>
                                             <% } %>
                     </div>
         </div>
@@ -204,7 +247,7 @@
 
     <% if (isLandingPage) { var categoriesWithPosts=[]; if (categories && categories.length> 0) {
         categories.forEach(cat => {
-        var catPosts = posts.filter(p => p.Category && p.Category.id === cat.id);
+        var catPosts = (posts || []).filter(p => p.Category && p.Category.id === cat.id);
         if (catPosts.length > 0) {
         categoriesWithPosts.push({ category: cat, posts: catPosts });
         }

@@ -23,6 +23,7 @@ const __dirname = path.dirname(__filename);
 
 app.use((req, res, next) => {
   res.locals.BASE_PATH = BASE_PATH;
+  res.locals.formatDate = (date, opts) => date ? new Date(date).toLocaleDateString('id-ID', opts) : '-';
   next();
 });
 
