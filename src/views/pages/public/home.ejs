@@ -34,18 +34,6 @@
                                 <p class="compact-header-sub">Jelajahi berbagai artikel dan tutorial seputar rekayasa
                                     perangkat lunak.</p>
                                 <% } %>
-                                    <form class="hero-search-form compact-search-form" action="<%= BASE_PATH %>/search"
-                                        method="GET">
-                                        <svg class="hero-search-icon" width="18" height="18" viewBox="0 0 24 24"
-                                            fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                                            <circle cx="11" cy="11" r="8" />
-                                            <path d="m21 21-4.35-4.35" />
-                                        </svg>
-                                        <input type="search" name="query"
-                                            value="<%= typeof q !== 'undefined' ? q : '' %>"
-                                            placeholder="Cari topik atau kata kunci lain..." autocomplete="off">
-                                        <button type="submit">Cari</button>
-                                    </form>
                     </div>
                 </div>
                 <% } %>
@@ -211,9 +199,6 @@
 
     <section class="latest-posts-slice<%= isLandingPage ? '' : ' latest-posts-slice--light' %>" style="padding-top: 4rem;">
         <div class="container">
-            <% if (!isLandingPage) { %>
-                <div style="width: 100%; border-top: 1.5px dashed #e2e8f0; margin: 0 0 3.5rem;"></div>
-                <% } %>
                     <h2 class="section-title">
                         <%= isLandingPage ? 'Postingan Terbaru' : (typeof title !=='undefined' ? title
                             : 'Daftar Artikel' ) %>
@@ -227,6 +212,7 @@
                                 <%- include('../../partials/post-card', { post, BASE_PATH, catColor }) %>
                                     <% }) %>
                                         <% } else { %>
+                                            <% if (isLandingPage) { %>
                                             <% for (var i = 0; i < 3; i++) { %>
                                             <div class="post-card-latest">
                                                 <div class="post-card-thumb">
@@ -239,6 +225,9 @@
                                                     <div class="skeleton skeleton--text skeleton--text-xs"></div>
                                                 </div>
                                             </div>
+                                            <% } %>
+                                            <% } else { %>
+                                                <p class="posts-empty">Belum ada artikel.</p>
                                             <% } %>
                                             <% } %>
                     </div>
