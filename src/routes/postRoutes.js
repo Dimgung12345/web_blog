@@ -9,8 +9,8 @@ router.get("/:id", postController.getPostById);
 router.get("/search", postController.searchPosts);
 router.get("/:slug", postController.getPostBySlug);
 router.get("/category/:categoryId", postController.getPostByCategory);
-router.post("/", auth('admin', 'editor'), postController.createPost);
-router.put("/:id", auth('admin', 'editor'), postController.updatePost);
+router.post("/", auth('admin', 'editor'), postController.uploadThumbnail, postController.createPost);
+router.put("/:id", auth('admin', 'editor'), postController.uploadThumbnail, postController.updatePost);
 router.delete("/:id", auth('admin'), postController.deletePost);
 
 export default router;
