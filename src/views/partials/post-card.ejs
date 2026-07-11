@@ -31,7 +31,7 @@ var _excerpt = (post.content || '').replace(/[#*`]/g, '').substring(0, 120);
         <div class="post-card-meta">
             <span><%= post.User ? post.User.username : 'Admin' %></span>
             <span class="post-card-sep">•</span>
-            <span><%= new Date(post.createdAt).toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' }) %></span>
+            <span><%= post.createdAt ? new Date(post.createdAt).toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' }) : '-' %></span>
             <span class="post-card-sep">•</span>
             <span><%= _readMin %> menit baca</span>
         </div>
