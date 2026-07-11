@@ -55,14 +55,29 @@ const toSlug = (text) => {
 // Get All Posts (API)
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await Post.findAll({
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const offset = (page - 1) * limit;
+
+    const { count, rows } = await Post.findAndCountAll({
       include: [
         { model: Category },
         { model: db.User, attributes: ["username"] }
       ],
-      order: [['createdAt', 'DESC']]
+      order: [['createdAt', 'DESC']],
+      limit,
+      offset
     });
-    res.json(posts);
+
+    res.json({
+      meta: {
+        total: count,
+        page,
+        limit,
+        totalPages: Math.ceil(count / limit)
+      },
+      data: rows
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
