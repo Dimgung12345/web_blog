@@ -1,7 +1,34 @@
     </main>
-    <footer style="background-color: var(--footer-bg); color: #a9b3ca; padding: 2rem 0; margin-top: 5rem; text-align: center;">
-        <div class="container">
-            <p style="font-size: 0.85rem;">&copy; <%= new Date().getFullYear() %> Blog. All rights reserved.</p>
+    <footer class="site-footer">
+        <div class="footer-cols">
+            <div class="container">
+                <div class="footer-col">
+                    <h4>Navigasi</h4>
+                    <ul>
+                        <li><a href="<%= BASE_PATH %>">Beranda</a></li>
+                        <li><a href="<%= BASE_PATH %>/posts">Semua Postingan</a></li>
+                        <li><a href="<%= BASE_PATH %>/categories">Kategori</a></li>
+                        <li><a href="<%= BASE_PATH %>/search">Pencarian</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Profile</h4>
+                    <ul>
+                        <li><a href="https://github.com/DevacctoRPL">Github</a></li>
+                        <li><a href="https://www.instagram.com/devacctorpl">Instagram</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Portal</h4>
+                    <ul>
+                        <li><a href="<%= BASE_PATH %>/login">Login Admin</a></li>
+                        <li><a href="<%= BASE_PATH %>/admin">Dashboard</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bar">
+            &copy; <%= new Date().getFullYear() %> Blog. Hak cipta dilindungi.
         </div>
     </footer>
 </body>

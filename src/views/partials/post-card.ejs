@@ -1,13 +1,12 @@
 <%
 var _readMin = Math.ceil(((post.content || '').split(/\s+/).length) / 200) || 1;
-var _excerpt = (post.content || '').replace(/[#*`]/g, '').substring(0, 120);
+var _excerpt = (post.content || '').replace(/[#*`]/g, '').substring(0, 140);
 %>
-<article class="post-card-latest">
+<article class="post-card">
     <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" class="post-card-thumb" aria-label="<%= post.title %>">
-        <% 
+        <%
             var thumbUrl = post.thumbnail || post.pathID;
-            if (thumbUrl) { 
-                // Jika absolute path (misal local upload 'storage/...'), append BASE_PATH
+            if (thumbUrl) {
                 if (!thumbUrl.startsWith('http') && !thumbUrl.startsWith('/')) {
                     thumbUrl = BASE_PATH + '/' + thumbUrl;
                 }
@@ -20,8 +19,7 @@ var _excerpt = (post.content || '').replace(/[#*`]/g, '').substring(0, 120);
     <div class="post-card-body">
         <% if (post.Category) { %>
             <a href="<%= BASE_PATH %>/posts/category/<%= post.Category.slug %>"
-               class="post-card-cat"
-               style="--cat-color: <%= catColor(post.Category.name) %>;">
+               class="cat-tag" style="--cat-color: <%= catColor(post.Category.name) %>;">
                 <%= post.Category.name %>
             </a>
         <% } %>
@@ -30,17 +28,12 @@ var _excerpt = (post.content || '').replace(/[#*`]/g, '').substring(0, 120);
         </h3>
         <div class="post-card-meta">
             <span><%= post.User ? post.User.username : 'Admin' %></span>
-            <span class="post-card-sep">•</span>
+            <span class="post-card-sep">|</span>
             <span><%= post.createdAt ? new Date(post.createdAt).toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' }) : '-' %></span>
-            <span class="post-card-sep">•</span>
-            <span><%= _readMin %> menit baca</span>
+            <span class="post-card-sep">|</span>
+            <span><%= _readMin %> mnt baca</span>
         </div>
         <p class="post-card-excerpt"><%= _excerpt %>…</p>
-        <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" class="post-card-readmore">
-            Baca selengkapnya
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-        </a>
+        <a href="<%= BASE_PATH %>/posts/<%= post.slug %>" class="readmore">Baca selengkapnya</a>
     </div>
 </article>

@@ -4,7 +4,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import * as mediaController from "../controllers/mediaController.js";
-import { sessionMiddleware } from "../middleware/session.js";
+import { auth } from "../middleware/session.js";
 
 const router = express.Router();
 
@@ -38,8 +38,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Routes
-router.post("/", sessionMiddleware, upload.single("file"), mediaController.create);
-router.put("/:id", sessionMiddleware, upload.single("file"), mediaController.update);
-router.delete("/:id", sessionMiddleware, mediaController.destroy);
+router.post("/", auth('admin', 'editor'), upload.single("file"), mediaController.create);
+router.put("/:id", auth('admin'), upload.single("file"), mediaController.update);
+router.delete("/:id", auth('admin'), mediaController.destroy);
 
 export default router;

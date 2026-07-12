@@ -22,7 +22,7 @@ export const register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      role: role || "admin", // default role admin kalau tidak diisi
+      role: role || "authenticated",
     });
 
     res.status(201).json({

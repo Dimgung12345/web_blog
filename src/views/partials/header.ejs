@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= typeof title !== 'undefined' ? title : 'Blog' %></title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="/images/favicon.png">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
@@ -14,34 +11,39 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <div class="container header-inner">
             <a href="<%= BASE_PATH %>" class="logo">
-                <img src="/images/favicon.png" alt="Logo RPL" class="logo-img">
+                <img src="/images/favicon.png" alt="Logo" class="logo-img">
                 <span>Blog</span>
             </a>
-            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <span></span><span></span><span></span>
             </button>
-            <nav id="main-nav">
-                <ul>
-                    <li><a href="<%= BASE_PATH %>">Home</a></li>
-                    <li><a href="<%= BASE_PATH %>/posts">All Posts</a></li>
-                    <li><a href="<%= BASE_PATH %>/categories">Categories</a></li>
-                </ul>
+            <nav class="top-nav" id="top-nav" aria-label="Primary">
+                <a href="<%= BASE_PATH %>" class="<%= typeof activeNav !== 'undefined' && activeNav === 'home' ? 'active' : '' %>">Home</a>
+                <a href="<%= BASE_PATH %>/posts" class="<%= typeof activeNav !== 'undefined' && activeNav === 'posts' ? 'active' : '' %>">Posts</a>
+                <a href="<%= BASE_PATH %>/categories" class="<%= typeof activeNav !== 'undefined' && activeNav === 'categories' ? 'active' : '' %>">Categories</a>
+                <a href="<%= BASE_PATH %>/search" class="<%= typeof activeNav !== 'undefined' && activeNav === 'search' ? 'active' : '' %>">Search</a>
+                <a href="<%= BASE_PATH %>/login" class="<%= typeof activeNav !== 'undefined' && activeNav === 'login' ? 'active' : '' %>">Login</a>
             </nav>
         </div>
     </header>
-    <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
     <script>
-        (function(){
-            var h=document.getElementById('hamburger'),n=document.getElementById('main-nav'),o=document.getElementById('mobile-nav-overlay'),b=document.body;
-            function toggleNav(){var isOpen=n.classList.toggle('open');h.classList.toggle('active');o.classList.toggle('active');b.classList.toggle('nav-open',isOpen);}
-            h.addEventListener('click',toggleNav);
-            o.addEventListener('click',toggleNav);
-            window.addEventListener('resize',function(){if(window.innerWidth>992){n.classList.remove('open');h.classList.remove('active');o.classList.remove('active');b.classList.remove('nav-open');}});
+        (function () {
+            var t = document.getElementById('nav-toggle'),
+                n = document.getElementById('top-nav');
+            if (!t || !n) return;
+            t.addEventListener('click', function () {
+                var open = n.classList.toggle('open');
+                t.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 860) {
+                    n.classList.remove('open');
+                    t.setAttribute('aria-expanded', 'false');
+                }
+            });
         })();
     </script>
-    <main>
+    <main class="container" style="padding-top:12px;padding-bottom:24px;">

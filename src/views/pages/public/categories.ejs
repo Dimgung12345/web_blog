@@ -1,46 +1,25 @@
-<%- include('../../partials/header', { title: 'Kategori - Blog' }) %>
+<%- include('../../partials/header', { title: 'Kategori - Blog', activeNav: 'categories' }) %>
 
-<section class="hero-post categories-hero">
+    <section class="hero">
+        <div class="container">
+            <h1>Kategori</h1>
+            <p class="hero-sub">Telusuri artikel kami berdasarkan topik untuk menemukan insight yang paling relevan bagi Anda.</p>
+        </div>
+    </section>
+
     <div class="container">
-        <h1 class="categories-hero-title">Kategori</h1>
-        <p class="categories-hero-sub">Telusuri artikel kami berdasarkan topik untuk menemukan insight yang paling relevan bagi Anda.</p>
-    </div>
-</section>
-
-<div class="container categories-bento-wrap">
-    <div class="bento-grid">
-        <% if (typeof categories !== 'undefined' && categories.length > 0) {
-            const gridPatterns = [
-                'span-w2-h2',
-                'span-w1-h3',
-                'span-w1-h1',
-                'span-w2-h1',
-                'span-w1-h2',
-                'span-w1-h1',
-                'span-w2-h1',
-                'span-w1-h2',
-                'span-w1-h1',
-                'span-w2-h2',
-                'span-w2-h1',
-                'span-w2-h2',
-                'span-w2-h1'
-            ];
-        %>
-            <% categories.forEach((cat, idx) => {
-                var pattern = gridPatterns[idx % gridPatterns.length];
-            %>
-                <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>"
-                   class="bento-item <%= pattern %>"
-                   style="--cat-color: <%= catColor(cat.name) %>;">
-                    <div class="bento-content">
-                        <h3 class="bento-title"><%= cat.name %></h3>
-                    </div>
-                </a>
-            <% }) %>
+        <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+            <div class="cat-grid">
+                <% categories.forEach(function (cat) { %>
+                    <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>"
+                       class="cat-box" style="--cat-color: <%= catColor(cat.name) %>;">
+                        <span class="cat-box-name"><%= cat.name %></span>
+                    </a>
+                <% }); %>
+            </div>
         <% } else { %>
-            <p class="posts-empty">Belum ada kategori.</p>
+            <div class="empty-note">Belum ada kategori.</div>
         <% } %>
     </div>
-</div>
 
-<%- include('../../partials/footer') %>
+    <%- include('../../partials/footer') %>

@@ -1,20 +1,18 @@
-<aside style="width: 250px;">
-    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-        <h3 style="margin-top: 0; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Kategori</h3>
-        <ul style="list-style: none; padding: 0; margin-top: 15px;">
-            <li style="margin-bottom: 12px;">
-                <a href="<%= BASE_PATH %>/categories" style="text-decoration: none; color: #3498db; font-weight: 500;">Semua Kategori</a>
-            </li>
-            <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
-                <% categories.forEach(cat => { %>
-                    <li style="margin-bottom: 12px;">
-                        <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>" style="text-decoration: none; color: #555; transition: 0.3s;">
-                            <%= cat.name %>
-                        </a>
-                    </li>
-                <% }) %>
-            <% } else { %>
-                <li style="margin-bottom: 12px; color: #999;">Belum ada kategori</li>
+<aside class="sidebox">
+    <div class="sidebox-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+        Kategori
+    </div>
+    <div class="sidebox-body">
+        <ul class="cat-list">
+            <li><a href="<%= BASE_PATH %>/categories">Semua Kategori</a></li>
+            <% if (typeof categories !== 'undefined' && categories.length > 0) {
+                categories.forEach(function (cat) { %>
+                <li>
+                    <a href="<%= BASE_PATH %>/posts/category/<%= cat.slug %>"><%= cat.name %></a>
+                </li>
+            <% }); } else { %>
+                <li><span class="text-secondary">Belum ada kategori</span></li>
             <% } %>
         </ul>
     </div>

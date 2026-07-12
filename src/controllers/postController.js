@@ -1,5 +1,36 @@
 import db from "../../models/index.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 const { Post, Category, Sequelize, Popularity } = db;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const thumbnailStorageRoot = path.join(__dirname, "../../storage/image/thumbnails");
+if (!fs.existsSync(thumbnailStorageRoot)) {
+  fs.mkdirSync(thumbnailStorageRoot, { recursive: true });
+}
+
+const thumbnailStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, thumbnailStorageRoot),
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const thumbnailUpload = multer({
+  storage: thumbnailStorage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) cb(null, true);
+    else cb(new Error("Hanya file gambar yang diperbolehkan"));
+  },
+});
+
+export const uploadThumbnail = thumbnailUpload.single("thumbnail");
 
 function generateSlug(title) {
   return title
@@ -55,15 +86,18 @@ export const getAllPosts = async (req, res) => {
 // Create Post
 export const createPost = async (req, res) => {
   try {
-    const { title, content, CategoryId, pathID } = req.body;
-    const slug = toSlug(title)
+    const { title, content, CategoryId } = req.body;
+    const slug = toSlug(title);
+    const pathID = req.file
+      ? `storage/image/thumbnails/${req.file.filename}`
+      : null;
+
     const newPost = await db.Post.create({
       title,
       slug,
       content,
       CategoryId,
       pathID,
-      slug,
       UserId: req.internalUserId
     });
 
@@ -153,6 +187,10 @@ export const updatePost = async (req, res) => {
 
     if (title) {
       updateData.slug = toSlug(title);
+    }
+
+    if (req.file) {
+      updateData.pathID = `storage/image/thumbnails/${req.file.filename}`;
     }
 
     const [updated] = await Post.update(
